@@ -19,21 +19,25 @@ import threading
 import time
 import urllib.error
 import urllib.request
+import urllib.parse
 import xml.etree.ElementTree as ET
 from datetime import datetime, timezone
 
 ROOT = Path(__file__).resolve().parents[1]
 STATE_PATH = ROOT / "data" / "classification-cache.json"
 FEED_DIR = ROOT / "feeds"
+DISCOVERY_STATE_PATH = ROOT / "data" / "discovery-state.json"
 
 SOURCE_FEED_URL = "https://nyaa.si/?page=rss&c=3_1&f=0"
-REPO_URL = "https://github.com/chintune/Nyaa-Literature-Format-Colors"
+LISTING_URL = "https://nyaa.si/"
+REPO_URL = "https://github.com/chintune/nyaa-si-literature-rss"
 USER_AGENT = f"NyaaLiteratureFormatColorsRSS/1.0 (+{REPO_URL})"
 MAX_WORKERS = 2
 MIN_REQUEST_INTERVAL_SECONDS = 0.55
 REQUEST_TIMEOUT_SECONDS = 20
 MAX_STATE_ITEMS = 5000
 MAX_FEED_ITEMS = 75
+MAX_DISCOVERY_PAGES_PER_RUN = 20  # up to 1,500 listing rows per run
 CLASSIFIED_REFRESH_SECONDS = 30 * 24 * 60 * 60
 UNKNOWN_REFRESH_SECONDS = 7 * 24 * 60 * 60
 ERROR_RETRY_SECONDS = 6 * 60 * 60
@@ -223,6 +227,239 @@ def classify_detail_page(torrent_id: str) -> dict:
     }
 
 
+
+class NyaaListingParser(HTMLParser):
+    """Extract torrent rows and upload timestamps from Nyaa's HTML search page."""
+
+    def __init__(self) -> None:
+        super().__init__(convert_charrefs=True)
+        self.in_torrent_table = False
+        self.in_tbody = False
+        self.current_row: dict | None = None
+        self.current_anchor: dict | None = None
+        self.rows: list[dict] = []
+        self.saw_table = False
+
+    def handle_starttag(self, tag: str, attrs: list[tuple[str, str | None]]) -> None:
+        attrs_map = dict(attrs)
+        classes = (attrs_map.get("class") or "").split()
+
+        if tag == "table" and "torrent-list" in classes:
+            self.in_torrent_table = True
+            self.saw_table = True
+            return
+        if not self.in_torrent_table:
+            return
+
+        if tag == "tbody":
+            self.in_tbody = True
+            return
+        if self.in_tbody and tag == "tr":
+            self.current_row = {"id": "", "title": "", "timestamp": None}
+            self.current_anchor = None
+            return
+
+        if self.current_row is not None:
+            if tag == "td":
+                timestamp = attrs_map.get("data-timestamp")
+                if timestamp:
+                    try:
+                        self.current_row["timestamp"] = int(timestamp)
+                    except (TypeError, ValueError):
+                        pass
+            elif tag == "a":
+                href = attrs_map.get("href") or ""
+                match = re.search(r"(?:^|/)view/(\d+)(?:#.*)?$", href)
+                if match and "comments" not in classes:
+                    self.current_anchor = {
+                        "id": match.group(1),
+                        "title": (attrs_map.get("title") or "").strip(),
+                        "text": [],
+                    }
+
+    def handle_data(self, data: str) -> None:
+        if self.current_anchor is not None and data:
+            self.current_anchor["text"].append(data)
+
+    def handle_endtag(self, tag: str) -> None:
+        if tag == "a" and self.current_anchor is not None and self.current_row is not None:
+            anchor = self.current_anchor
+            self.current_row["id"] = anchor["id"]
+            self.current_row["title"] = anchor["title"] or " ".join(anchor["text"]).strip()
+            self.current_anchor = None
+            return
+
+        if tag == "tr" and self.current_row is not None:
+            if self.current_row.get("id"):
+                self.rows.append(self.current_row)
+            self.current_row = None
+            self.current_anchor = None
+        elif tag == "tbody" and self.in_torrent_table:
+            self.in_tbody = False
+        elif tag == "table" and self.in_torrent_table:
+            self.in_torrent_table = False
+            self.in_tbody = False
+
+
+def listing_page_url(page_number: int) -> str:
+    query = urllib.parse.urlencode({
+        "f": "0",
+        "c": "3_1",
+        "q": "",
+        "p": str(page_number),
+        "s": "id",
+        "o": "desc",
+    })
+    return f"{LISTING_URL}?{query}"
+
+
+def fetch_listing_page(page_number: int) -> list[dict]:
+    """Fetch one paginated HTML results page; fail loudly if HTML changed."""
+    url = listing_page_url(page_number)
+    page_html = request_bytes(url).decode("utf-8", errors="replace")
+    parser = NyaaListingParser()
+    parser.feed(page_html)
+    if not parser.saw_table:
+        raise RuntimeError(
+            f"Nyaa listing page {page_number} did not contain a torrent-list table. "
+            "The site may be unavailable or its HTML structure may have changed."
+        )
+
+    results: list[dict] = []
+    seen_ids: set[str] = set()
+    for row in parser.rows:
+        torrent_id = str(row["id"])
+        if torrent_id in seen_ids:
+            continue
+        seen_ids.add(torrent_id)
+        timestamp = row.get("timestamp")
+        pub_date = email.utils.formatdate(timestamp, usegmt=True) if timestamp else ""
+        title = (row.get("title") or "").strip() or f"Nyaa torrent {torrent_id}"
+        detail_url = f"https://nyaa.si/view/{torrent_id}"
+        results.append({
+            "id": torrent_id,
+            "title": title,
+            "link": f"https://nyaa.si/download/{torrent_id}.torrent",
+            "pub_date": pub_date,
+            "description": f'<a href="{detail_url}">View torrent details on Nyaa.si</a>',
+            "guid": detail_url,
+        })
+    return results
+
+
+def load_discovery_state() -> dict:
+    try:
+        value = json.loads(DISCOVERY_STATE_PATH.read_text(encoding="utf-8"))
+        return value if isinstance(value, dict) else {}
+    except (OSError, json.JSONDecodeError):
+        return {}
+
+
+def save_discovery_state(value: dict) -> None:
+    DISCOVERY_STATE_PATH.parent.mkdir(parents=True, exist_ok=True)
+    DISCOVERY_STATE_PATH.write_text(
+        json.dumps(value, ensure_ascii=False, indent=2) + "\n",
+        encoding="utf-8",
+    )
+
+
+def discover_listing_items(known_before_run: set[str], discovery_state: dict) -> tuple[list[dict], dict]:
+    """
+    Walk Nyaa's newest-first HTML pages until a fully-known page is reached.
+
+    If the per-run page safety limit is reached, remember the oldest scanned
+    torrent ID. The next run scans from page 1 to find that anchor and resumes
+    beyond it, so catch-up can progress over multiple runs without forgetting
+    that there are older pages left to inspect.
+    """
+    checkpoint_id = str(discovery_state.get("resume_after_id") or "")
+    checkpoint_page: int | None = None
+    checkpoint_was_found = False
+    scanned_rows: dict[str, dict] = {}
+    last_page_items: list[dict] = []
+    reached_known_boundary = False
+    reached_end = False
+    scan_failed = False
+    pages_scanned = 0
+
+    for page_number in range(1, MAX_DISCOVERY_PAGES_PER_RUN + 1):
+        try:
+            page_items = fetch_listing_page(page_number)
+        except Exception as exc:
+            scan_failed = True
+            print(f"WARNING: catch-up scan stopped at page {page_number}: {type(exc).__name__}: {exc}")
+            break
+
+        if page_number == 1 and not page_items:
+            scan_failed = True
+            print("WARNING: Nyaa listing page 1 had no torrent rows; preserving discovery cursor.")
+            break
+        if not page_items:
+            reached_end = True
+            print(f"Reached the end of Nyaa listings at page {page_number}.")
+            break
+
+        pages_scanned = page_number
+        last_page_items = page_items
+        page_ids = [item["id"] for item in page_items]
+        all_previously_known = all(torrent_id in known_before_run for torrent_id in page_ids)
+
+        for item in page_items:
+            scanned_rows[item["id"]] = item
+
+        if checkpoint_id and checkpoint_id in page_ids:
+            checkpoint_was_found = True
+            checkpoint_page = page_number
+            print(f"Found catch-up checkpoint torrent #{checkpoint_id} on page {page_number}.")
+
+        if not checkpoint_id:
+            if all_previously_known:
+                reached_known_boundary = True
+                print(f"Reached a fully-known page ({page_number}); catch-up is complete.")
+                break
+        else:
+            # Don't stop on the anchor's own page: new older rows can shift the
+            # anchor away from the bottom of that page between scheduled runs.
+            if checkpoint_was_found and checkpoint_page is not None and page_number > checkpoint_page:
+                if all_previously_known:
+                    reached_known_boundary = True
+                    print(f"Reached the previously-known history after checkpoint on page {page_number}.")
+                    break
+
+    next_state = dict(discovery_state)
+    next_state["last_scan_at"] = int(time.time())
+    next_state["last_scan_pages"] = pages_scanned
+
+    if scan_failed:
+        # Do not alter an existing checkpoint if Nyaa blocked us or changed HTML.
+        pass
+    elif reached_end or reached_known_boundary:
+        next_state["resume_after_id"] = None
+        next_state["catch_up_pending"] = False
+    elif pages_scanned >= MAX_DISCOVERY_PAGES_PER_RUN:
+        if not checkpoint_id or checkpoint_was_found:
+            oldest_item = last_page_items[-1] if last_page_items else None
+            if oldest_item:
+                next_state["resume_after_id"] = oldest_item["id"]
+                next_state["catch_up_pending"] = True
+                print(
+                    f"Page safety limit reached. Will resume catch-up after torrent "
+                    f"#{oldest_item['id']} on the next run."
+                )
+        else:
+            # The existing anchor is now deeper than our safety limit; keep it
+            # rather than accidentally advancing past unscanned history.
+            next_state["catch_up_pending"] = True
+            print(
+                f"Existing catch-up anchor #{checkpoint_id} was not found within "
+                f"{MAX_DISCOVERY_PAGES_PER_RUN} pages; retaining the anchor."
+            )
+    else:
+        next_state["resume_after_id"] = None
+        next_state["catch_up_pending"] = False
+
+    return list(scanned_rows.values()), next_state
+
 def load_state() -> dict:
     if not STATE_PATH.exists():
         return {}
@@ -314,22 +551,65 @@ def main() -> None:
     now = int(time.time())
     print(f"Fetching source RSS: {SOURCE_FEED_URL}")
     source_items = parse_source_feed(request_bytes(SOURCE_FEED_URL))
-    state = load_state()
-    check_ids: list[str] = []
 
-    for item in source_items:
-        entry = state.setdefault(item["id"], {
-            "id": item["id"], "formats": [], "extensions": [], "status": "",
+    state = load_state()
+    known_before_run = set(state.keys())
+    discovery_state = load_discovery_state()
+
+    listing_items, next_discovery_state = discover_listing_items(
+        known_before_run, discovery_state
+    )
+
+    # Prefer richer RSS metadata for its entries; add HTML listing entries for
+    # anything older than the source RSS window that catch-up scanning finds.
+    merged_items: dict[str, dict] = {item["id"]: item for item in source_items}
+    for item in listing_items:
+        existing = merged_items.get(item["id"])
+        if existing is None:
+            merged_items[item["id"]] = item
+        else:
+            for key, value in item.items():
+                if not existing.get(key) and value:
+                    existing[key] = value
+
+    source_ids = {item["id"] for item in source_items}
+    check_ids: list[str] = []
+    checked_ids: set[str] = set()
+
+    for item in merged_items.values():
+        torrent_id = item["id"]
+        existed_before = torrent_id in state
+        entry = state.setdefault(torrent_id, {
+            "id": torrent_id, "formats": [], "extensions": [], "status": "",
             "reason": "", "checked_at": 0,
         })
-        update_item_metadata(entry, item, now)
-        if should_check(entry, now):
-            check_ids.append(item["id"])
 
-    print(f"RSS items: {len(source_items)}; detail pages needing inspection: {len(check_ids)}")
+        if torrent_id in source_ids:
+            # Source RSS metadata is refreshed each run, as before.
+            update_item_metadata(entry, item, now)
+        elif not existed_before:
+            # Set last_seen for new history discovered through HTML pages.
+            update_item_metadata(entry, item, now)
+        else:
+            # Refresh missing metadata without making old history appear newly seen.
+            for key in ("title", "link", "pub_date", "description", "guid"):
+                if item.get(key) and not entry.get(key):
+                    entry[key] = item[key]
+
+        if torrent_id not in checked_ids and should_check(entry, now):
+            checked_ids.add(torrent_id)
+            check_ids.append(torrent_id)
+
+    print(
+        f"Source RSS items: {len(source_items)}; listing rows scanned: {len(listing_items)}; "
+        f"detail pages needing inspection: {len(check_ids)}"
+    )
     if check_ids:
         with concurrent.futures.ThreadPoolExecutor(max_workers=MAX_WORKERS) as pool:
-            futures = {pool.submit(classify_detail_page, torrent_id): torrent_id for torrent_id in check_ids}
+            futures = {
+                pool.submit(classify_detail_page, torrent_id): torrent_id
+                for torrent_id in check_ids
+            }
             for future in concurrent.futures.as_completed(futures):
                 torrent_id = futures[future]
                 try:
@@ -354,11 +634,15 @@ def main() -> None:
         state = {str(entry["id"]): entry for entry in keep}
 
     FEED_DIR.mkdir(parents=True, exist_ok=True)
-    (STATE_PATH.parent).mkdir(parents=True, exist_ok=True)
-    STATE_PATH.write_text(json.dumps(state, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+    STATE_PATH.parent.mkdir(parents=True, exist_ok=True)
+    STATE_PATH.write_text(
+        json.dumps(state, ensure_ascii=False, indent=2) + "\n",
+        encoding="utf-8",
+    )
+    save_discovery_state(next_discovery_state)
 
     # Newest-first feeds. Every file-list category is assigned independently:
-    # a mixed torrent can appear in more than one feed if it contains both formats.
+    # a mixed torrent can appear in more than one feed if it contains multiple formats.
     ordered = sorted(
         state.values(),
         key=lambda entry: parse_pub_timestamp(
@@ -387,6 +671,11 @@ def main() -> None:
         for name in FORMAT_EXTENSIONS
     }
     print("Cache totals:", json.dumps(counts))
+    if next_discovery_state.get("catch_up_pending"):
+        print(
+            "WARNING: catch-up is still pending. The next scheduled run will continue "
+            "from the saved checkpoint."
+        )
 
 
 if __name__ == "__main__":
