@@ -30,7 +30,7 @@ DISCOVERY_STATE_PATH = ROOT / "data" / "discovery-state.json"
 
 SOURCE_FEED_URL = "https://nyaa.si/?page=rss&c=3_1&f=0"
 LISTING_URL = "https://nyaa.si/"
-REPO_URL = "https://github.com/chintune/nyaa-si-literature-rss"
+REPO_URL = "https://github.com/chintu-io/nyaa-si-literature-rss"
 USER_AGENT = f"NyaaLiteratureFormatColorsRSS/1.0 (+{REPO_URL})"
 MAX_WORKERS = 2
 MIN_REQUEST_INTERVAL_SECONDS = 0.55
