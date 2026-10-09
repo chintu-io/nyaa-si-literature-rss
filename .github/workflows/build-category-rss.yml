@@ -14,6 +14,7 @@ on:
       - "scripts/build_feeds.py"
       - "nyaa-literature-format-colors.user.js"
       - "README.md"
+      - "tests/**"
 
 permissions:
   contents: write
@@ -40,6 +41,7 @@ jobs:
       - name: Check script syntax
         run: |
           python -m py_compile scripts/build_feeds.py
+          python -m unittest discover -s tests -v
           node --check nyaa-literature-format-colors.user.js
 
       - name: Fetch Nyaa RSS and build filtered feeds
