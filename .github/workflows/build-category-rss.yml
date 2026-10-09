@@ -49,7 +49,7 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add data/classification-cache.json feeds/manga.xml feeds/novels.xml feeds/audiobooks.xml
+          git add data/classification-cache.json data/discovery-state.json feeds/manga.xml feeds/novels.xml feeds/audiobooks.xml
           if git diff --cached --quiet; then
             echo "No feed or cache changes to commit."
           else
