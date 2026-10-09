@@ -1,0 +1,54 @@
+name: Build categorized Nyaa RSS feeds
+
+on:
+  schedule:
+    # Run twice an hour. Nyaa's RSS is the source; file lists are checked only
+    # for new or expired cache entries.
+    - cron: "7,37 * * * *"
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+    paths:
+      - ".github/workflows/build-category-rss.yml"
+      - "scripts/build_feeds.py"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: categorized-nyaa-rss
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Check script syntax
+        run: python -m py_compile scripts/build_feeds.py
+
+      - name: Fetch Nyaa RSS and build filtered feeds
+        run: python scripts/build_feeds.py
+
+      - name: Commit updated feeds and classification cache
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add data/classification-cache.json feeds/manga.xml feeds/novels.xml feeds/audiobooks.xml
+          if git diff --cached --quiet; then
+            echo "No feed or cache changes to commit."
+          else
+            git commit -m "Refresh categorized RSS feeds"
+            git push
+          fi
