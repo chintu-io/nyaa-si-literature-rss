@@ -12,6 +12,8 @@ on:
     paths:
       - ".github/workflows/build-category-rss.yml"
       - "scripts/build_feeds.py"
+      - "nyaa-literature-format-colors.user.js"
+      - "README.md"
 
 permissions:
   contents: write
@@ -36,7 +38,9 @@ jobs:
           python-version: "3.12"
 
       - name: Check script syntax
-        run: python -m py_compile scripts/build_feeds.py
+        run: |
+          python -m py_compile scripts/build_feeds.py
+          node --check nyaa-literature-format-colors.user.js
 
       - name: Fetch Nyaa RSS and build filtered feeds
         run: python scripts/build_feeds.py
