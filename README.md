@@ -1,26 +1,44 @@
 # Nyaa Literature Format Colors
 
-A Tampermonkey userscript that classifies torrents on Nyaa's **Literature / English-translated** results page by reading the torrent detail page's file list.
+A Tampermonkey userscript and generated RSS feeds for separating Manga, Novels, and Audiobooks from Nyaa's **Literature / English-translated** category.
 
-## Install
+## Categorized RSS feeds
 
-1. Open [the userscript](https://raw.githubusercontent.com/chintune/Nyaa-Literature-Format-Colors/main/nyaa-literature-format-colors.user.js) after the script has been added to this repository.
-2. Install it using Tampermonkey, or copy the script into a new Tampermonkey script and save.
-3. Visit https://nyaa.si/?f=0&c=3_1&q=
+Subscribe to these URLs in your RSS reader:
 
-## Classifications
+| Feed | Detected file extensions | RSS URL |
+|---|---|---|
+| Manga | `.cbz`, `.cbr` | [manga.xml](https://raw.githubusercontent.com/chintune/Nyaa-Literature-Format-Colors/main/feeds/manga.xml) |
+| Novels | `.epub`, `.pdf` | [novels.xml](https://raw.githubusercontent.com/chintune/Nyaa-Literature-Format-Colors/main/feeds/novels.xml) |
+| Audiobooks | `.m4b` | [audiobooks.xml](https://raw.githubusercontent.com/chintune/Nyaa-Literature-Format-Colors/main/feeds/audiobooks.xml) |
 
-- **MANGA** (teal): file list contains `.cbz` and/or `.cbr`
-- **NOVEL** (purple): file list contains `.epub` and/or `.pdf`
-- **MIXED** (amber): both types appear
-- **UNKNOWN** (grey): no matching files were found or the file list could not be inspected
+These feeds are generated from Nyaa's source feed:
 
-The script adds a format badge and a row indicator while leaving Nyaa's existing trust/remake indicators intact.
+`https://nyaa.si/?page=rss&c=3_1&f=0`
 
-## How it works
+A scheduled GitHub Actions workflow refreshes the categorized feeds twice per hour. For each new torrent, it reads the torrent detail page's visible file list, stores the classification cache, and regenerates the feed files. Up to 200 recent matching entries are included per feed. Cached entries are retained between runs so items remain in the feeds after they leave Nyaa's limited recent RSS window.
 
-The search results don't contain every torrent's full file list, so uncached entries are checked with background same-origin requests to their detail pages. It does not open new tabs. Requests are limited to two at a time, and successful classifications are cached in the browser for 180 days (unknown results for one day). The page includes a **Retry UNKNOWN** button for unknown items.
+**Mixed-format torrents can appear in multiple feeds.** For example, an upload that contains both CBZ and EPUB files appears in both Manga and Novels. A torrent containing an M4B file appears in Audiobooks.
 
-## Limitations
+### Important limitations
 
-Extensions are heuristics, not perfect semantic classification. A PDF can be a manga scan, and some torrents may not expose a complete file list. Mixed-format torrents are marked **MIXED** rather than forced into one category.
+- Nyaa's source RSS only exposes its recent window. The workflow discovers torrents while they remain in that source window, so it is not a historical backfill of every torrent ever uploaded.
+- `.pdf` is treated as a novel/document format as requested, but some PDFs are manga scans. File-extension classification is a useful heuristic rather than perfect content understanding.
+- If Nyaa doesn't render a torrent's file list (for example, because it has too many files) or a request fails, the torrent is left out until it can be classified.
+- Generated feeds live in this repository's `feeds/` directory. GitHub Actions must be enabled for automatic updates. You can start a refresh from the **Actions** tab using **Build categorized Nyaa RSS feeds → Run workflow**.
+
+## Tampermonkey userscript
+
+Install the [userscript](https://raw.githubusercontent.com/chintune/Nyaa-Literature-Format-Colors/main/nyaa-literature-format-colors.user.js) in Tampermonkey, then visit [Nyaa Literature / English-translated](https://nyaa.si/?f=0&c=3_1&q=).
+
+The userscript inspects torrent detail pages in background requests (no tabs are opened) and colors each search-result row. Successful classifications are cached in your browser; use **Retry UNKNOWN** for entries that could not be identified.
+
+## Format colors
+
+- **Manga** (teal): `.cbz` and/or `.cbr`
+- **Novels** (purple): `.epub` and/or `.pdf`
+- **Audiobooks** (blue): `.m4b`
+- **Mixed** (amber): multiple format families detected
+- **Unknown** (grey): no supported extension found or the file list was unavailable
+
+Nyaa's native trust/remake indicators are separate from the custom format classifications.
