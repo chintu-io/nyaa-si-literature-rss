@@ -396,7 +396,8 @@ def discover_listing_items(
     # the previously scanned anchor (which may shift a little as new uploads
     # arrive), then scan another bounded batch of older pages.
     max_pages_without_cursor = MAX_DISCOVERY_PAGES_PER_RUN
-    max_pages_before_cursor = MAX_CURSOR_LOOKUP_PAGES
+    previous_cursor_page = int(discovery_state.get("resume_after_page") or MAX_DISCOVERY_PAGES_PER_RUN)
+    max_pages_before_cursor = max(MAX_CURSOR_LOOKUP_PAGES, previous_cursor_page + 5)
 
     for page_number in range(1, max_pages_without_cursor + 1 if not checkpoint_id else max_pages_before_cursor + MAX_DISCOVERY_PAGES_PER_RUN + 1):
         try:
@@ -501,6 +502,7 @@ def discover_listing_items(
         pass
     elif caught_up or reached_end or stopped_on_known_boundary:
         next_state["resume_after_id"] = None
+        next_state["resume_after_page"] = None
         next_state["catch_up_pending"] = False
     else:
         if last_page_items:
@@ -508,8 +510,12 @@ def discover_listing_items(
             # it wasn't found, advancing it could skip an unscanned gap.
             if not checkpoint_id or checkpoint_found:
                 next_state["resume_after_id"] = last_page_items[-1]["id"]
+                next_state["resume_after_page"] = pages_scanned
             else:
                 next_state["resume_after_id"] = checkpoint_id
+                # If new uploads pushed the anchor beyond the lookup window,
+                # expand the next lookup range gradually so the cursor remains reachable.
+                next_state["resume_after_page"] = pages_scanned + 5
         next_state["catch_up_pending"] = True
 
     return list(scanned_rows.values()), next_state, caught_up, scan_failed
@@ -736,7 +742,7 @@ def main() -> None:
                 for torrent_id in check_ids
             }
             for future in concurrent.futures.as_completed(futures):
-                torrent_id = future_to_id = futures[future]
+                torrent_id = futures[future]
                 try:
                     result = future.result()
                 except Exception as exc:
