@@ -1,8 +1,8 @@
 // ==UserScript==
 // @name         Nyaa Literature Format Colors
 // @namespace    https://nyaa.si/
-// @version      1.1.0
-// @description  Identify manga vs novels in Nyaa's English-translated Literature results by inspecting each torrent's file list.
+// @version      1.2.0
+// @description  Prefix Nyaa Literature torrent titles with a manga, novel, audiobook, mixed, or unknown format label.
 // @match        https://nyaa.si/*
 // @run-at       document-idle
 // @grant        none
@@ -24,7 +24,7 @@
     manga: { label: 'MANGA', hint: 'File list contains .CBZ and/or .CBR', color: '#087f73', tint: 'rgba(8, 127, 115, 0.09)' },
     novel: { label: 'NOVEL', hint: 'File list contains .EPUB and/or .PDF', color: '#6651c9', tint: 'rgba(102, 81, 201, 0.10)' },
     audiobook: { label: 'AUDIOBOOK', hint: 'File list contains .M4B', color: '#006bb6', tint: 'rgba(0, 107, 182, 0.10)' },
-    mixed: { label: 'MIXED', hint: 'File list contains both manga and novel file types', color: '#b56a00', tint: 'rgba(181, 106, 0, 0.11)' },
+    mixed: { label: 'MIXED', hint: 'File list contains multiple supported format families', color: '#b56a00', tint: 'rgba(181, 106, 0, 0.11)' },
     unknown: { label: 'UNKNOWN', hint: 'No matching file extension found, or Nyaa did not show the file list', color: '#777777', tint: 'rgba(119, 119, 119, 0.07)' },
     checking: { label: 'CHECKING…', hint: 'Reading the torrent file list in the background', color: '#737373', tint: 'rgba(119, 119, 119, 0.05)' },
   };
@@ -184,7 +184,7 @@
     if (!badge) {
       badge = document.createElement('span');
       badge.className = 'nyaa-ft-badge';
-      item.titleLink.insertAdjacentElement('afterend', badge);
+      item.titleLink.insertAdjacentElement('beforebegin', badge);
     }
     badge.textContent = meta.label;
     badge.className = `nyaa-ft-badge nyaa-ft-badge-${safeType}`;
@@ -252,7 +252,7 @@
       #nyaa-literature-format-colors-panel .swatch-audiobook { background:#006bb6; } #nyaa-literature-format-colors-panel .swatch-mixed { background:#b56a00; } #nyaa-literature-format-colors-panel .swatch-unknown { background:#777; }
       #nyaa-literature-format-colors-panel .nyaa-ft-note { opacity:.72;font-size:12px; }
       #nyaa-literature-format-colors-panel .nyaa-ft-retry { border:1px solid #888;border-radius:4px;padding:3px 8px;color:inherit;background:transparent;cursor:pointer; }
-      .torrent-list .nyaa-ft-badge { display:inline-block;vertical-align:1px;margin-left:7px;padding:2px 5px;border:1px solid currentColor;border-radius:3px;font-size:10px;line-height:1.2;font-weight:700;letter-spacing:.035em;white-space:nowrap; }
+      .torrent-list .nyaa-ft-badge { display:inline-block;vertical-align:1px;margin-left:0;margin-right:7px;padding:2px 5px;border:1px solid currentColor;border-radius:3px;font-size:10px;line-height:1.2;font-weight:700;letter-spacing:.035em;white-space:nowrap; }
       .torrent-list .nyaa-ft-badge-manga { color:#087f73;background:#d8f2ee; } .torrent-list .nyaa-ft-badge-novel { color:#5944b4;background:#e9e4ff; }
       .torrent-list .nyaa-ft-badge-audiobook { color:#00558f;background:#d9edff; }
       .torrent-list .nyaa-ft-badge-mixed { color:#925400;background:#ffedc8; } .torrent-list .nyaa-ft-badge-unknown,.torrent-list .nyaa-ft-badge-checking { color:#666;background:#eee; }
