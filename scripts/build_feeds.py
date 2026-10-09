@@ -37,7 +37,9 @@ MIN_REQUEST_INTERVAL_SECONDS = 0.55
 REQUEST_TIMEOUT_SECONDS = 20
 MAX_STATE_ITEMS = 5000
 MAX_FEED_ITEMS = 75
-MAX_DISCOVERY_PAGES_PER_RUN = 20  # up to 1,500 listing rows per run
+MAX_DISCOVERY_PAGES_PER_RUN = 20  # up to 1,500 older listing rows per catch-up step
+MAX_CURSOR_LOOKUP_PAGES = MAX_DISCOVERY_PAGES_PER_RUN + 5  # allow modest page shifts between runs
+MAX_DETAIL_CLASSIFICATIONS_PER_RUN = 250  # keep each Actions job within its time budget
 CLASSIFIED_REFRESH_SECONDS = 30 * 24 * 60 * 60
 UNKNOWN_REFRESH_SECONDS = 7 * 24 * 60 * 60
 ERROR_RETRY_SECONDS = 6 * 60 * 60
@@ -363,31 +365,48 @@ def save_discovery_state(value: dict) -> None:
     )
 
 
-def discover_listing_items(known_before_run: set[str], discovery_state: dict) -> tuple[list[dict], dict]:
+def discover_listing_items(
+    known_before_run: set[str],
+    discovery_state: dict,
+    target_anchor_id: str,
+) -> tuple[list[dict], dict, bool, bool]:
     """
-    Walk Nyaa's newest-first HTML pages until a fully-known page is reached.
+    Scan newest-first Nyaa HTML pages up to the previous run's frontier.
 
-    If the per-run page safety limit is reached, remember the oldest scanned
-    torrent ID. The next run scans from page 1 to find that anchor and resumes
-    beyond it, so catch-up can progress over multiple runs without forgetting
-    that there are older pages left to inspect.
+    Normally this only needs one or two pages. If a run falls behind far enough
+    to hit the page safety limit, save a resume_after_id checkpoint. On the next
+    run, locate that checkpoint from page 1, then advance up to
+    MAX_DISCOVERY_PAGES_PER_RUN pages deeper toward the prior frontier.
+
+    Returns (listing_items, next_state, caught_up, scan_failed).
     """
     checkpoint_id = str(discovery_state.get("resume_after_id") or "")
+    checkpoint_found = not bool(checkpoint_id)
     checkpoint_page: int | None = None
-    checkpoint_was_found = False
     scanned_rows: dict[str, dict] = {}
     last_page_items: list[dict] = []
-    reached_known_boundary = False
-    reached_end = False
-    scan_failed = False
     pages_scanned = 0
+    pages_after_checkpoint = 0
+    caught_up = False
+    scan_failed = False
+    reached_end = False
+    stopped_on_known_boundary = False
 
-    for page_number in range(1, MAX_DISCOVERY_PAGES_PER_RUN + 1):
+    # Without a cursor, at most 20 pages are needed. With a cursor, first find
+    # the previously scanned anchor (which may shift a little as new uploads
+    # arrive), then scan another bounded batch of older pages.
+    max_pages_without_cursor = MAX_DISCOVERY_PAGES_PER_RUN
+    max_pages_before_cursor = MAX_CURSOR_LOOKUP_PAGES
+
+    for page_number in range(1, max_pages_without_cursor + 1 if not checkpoint_id else max_pages_before_cursor + MAX_DISCOVERY_PAGES_PER_RUN + 1):
         try:
             page_items = fetch_listing_page(page_number)
         except Exception as exc:
             scan_failed = True
-            print(f"WARNING: catch-up scan stopped at page {page_number}: {type(exc).__name__}: {exc}")
+            print(
+                f"WARNING: catch-up scan stopped at page {page_number}: "
+                f"{type(exc).__name__}: {exc}"
+            )
             break
 
         if page_number == 1 and not page_items:
@@ -397,6 +416,7 @@ def discover_listing_items(known_before_run: set[str], discovery_state: dict) ->
         if not page_items:
             reached_end = True
             print(f"Reached the end of Nyaa listings at page {page_number}.")
+            caught_up = True
             break
 
         pages_scanned = page_number
@@ -404,61 +424,96 @@ def discover_listing_items(known_before_run: set[str], discovery_state: dict) ->
         page_ids = [item["id"] for item in page_items]
         all_previously_known = all(torrent_id in known_before_run for torrent_id in page_ids)
 
-        for item in page_items:
+        # Capture rows through the target frontier only. The remainder of the
+        # page is older than the previous run's boundary and isn't part of this
+        # catch-up window.
+        anchor_index = next(
+            (index for index, item in enumerate(page_items) if item["id"] == target_anchor_id),
+            None,
+        )
+        if anchor_index is not None:
+            items_to_add = page_items[:anchor_index + 1]
+            caught_up = True
+        else:
+            items_to_add = page_items
+
+        for item in items_to_add:
             scanned_rows[item["id"]] = item
 
-        if checkpoint_id and checkpoint_id in page_ids:
-            checkpoint_was_found = True
+        if checkpoint_id and not checkpoint_found and checkpoint_id in page_ids:
+            checkpoint_found = True
             checkpoint_page = page_number
             print(f"Found catch-up checkpoint torrent #{checkpoint_id} on page {page_number}.")
 
-        if not checkpoint_id:
-            if all_previously_known:
-                reached_known_boundary = True
-                print(f"Reached a fully-known page ({page_number}); catch-up is complete.")
-                break
-        else:
-            # Don't stop on the anchor's own page: new older rows can shift the
-            # anchor away from the bottom of that page between scheduled runs.
-            if checkpoint_was_found and checkpoint_page is not None and page_number > checkpoint_page:
-                if all_previously_known:
-                    reached_known_boundary = True
-                    print(f"Reached the previously-known history after checkpoint on page {page_number}.")
+        if caught_up:
+            print(f"Reached previous discovery frontier at torrent #{target_anchor_id}.")
+            break
+
+        if checkpoint_id:
+            if not checkpoint_found:
+                if page_number >= max_pages_before_cursor:
+                    print(
+                        f"WARNING: checkpoint #{checkpoint_id} wasn't found within "
+                        f"{max_pages_before_cursor} pages; keeping it for the next run."
+                    )
                     break
+            elif checkpoint_page is not None and page_number > checkpoint_page:
+                pages_after_checkpoint += 1
+                # If the old anchor was deleted from Nyaa, a fully-known page
+                # beyond the checkpoint is a safe boundary. Do not use this
+                # shortcut before the checkpoint, or it could skip pending history.
+                if all_previously_known:
+                    stopped_on_known_boundary = True
+                    caught_up = True
+                    print(
+                        f"Reached a fully-known page ({page_number}) after the checkpoint; "
+                        "no unseen listings remain in the current catch-up window."
+                    )
+                    break
+                if pages_after_checkpoint >= MAX_DISCOVERY_PAGES_PER_RUN:
+                    print(
+                        f"Catch-up advanced {pages_after_checkpoint} pages beyond its checkpoint; "
+                        "saving a new checkpoint for the next run."
+                    )
+                    break
+        else:
+            if all_previously_known:
+                stopped_on_known_boundary = True
+                caught_up = True
+                print(
+                    f"Reached a fully-known page ({page_number}); "
+                    "the source window has been caught up."
+                )
+                break
+            if page_number >= max_pages_without_cursor:
+                print(
+                    f"Page safety limit reached at page {page_number}; "
+                    "saving a checkpoint for the next run."
+                )
+                break
 
     next_state = dict(discovery_state)
     next_state["last_scan_at"] = int(time.time())
     next_state["last_scan_pages"] = pages_scanned
 
     if scan_failed:
-        # Do not alter an existing checkpoint if Nyaa blocked us or changed HTML.
+        # Keep both the target frontier and any resume checkpoint untouched.
         pass
-    elif reached_end or reached_known_boundary:
+    elif caught_up or reached_end or stopped_on_known_boundary:
         next_state["resume_after_id"] = None
         next_state["catch_up_pending"] = False
-    elif pages_scanned >= MAX_DISCOVERY_PAGES_PER_RUN:
-        if not checkpoint_id or checkpoint_was_found:
-            oldest_item = last_page_items[-1] if last_page_items else None
-            if oldest_item:
-                next_state["resume_after_id"] = oldest_item["id"]
-                next_state["catch_up_pending"] = True
-                print(
-                    f"Page safety limit reached. Will resume catch-up after torrent "
-                    f"#{oldest_item['id']} on the next run."
-                )
-        else:
-            # The existing anchor is now deeper than our safety limit; keep it
-            # rather than accidentally advancing past unscanned history.
-            next_state["catch_up_pending"] = True
-            print(
-                f"Existing catch-up anchor #{checkpoint_id} was not found within "
-                f"{MAX_DISCOVERY_PAGES_PER_RUN} pages; retaining the anchor."
-            )
     else:
-        next_state["resume_after_id"] = None
-        next_state["catch_up_pending"] = False
+        if last_page_items:
+            # Advance the checkpoint only if its previous anchor was found. If
+            # it wasn't found, advancing it could skip an unscanned gap.
+            if not checkpoint_id or checkpoint_found:
+                next_state["resume_after_id"] = last_page_items[-1]["id"]
+            else:
+                next_state["resume_after_id"] = checkpoint_id
+        next_state["catch_up_pending"] = True
 
-    return list(scanned_rows.values()), next_state
+    return list(scanned_rows.values()), next_state, caught_up, scan_failed
+
 
 def load_state() -> dict:
     if not STATE_PATH.exists():
@@ -556,12 +611,57 @@ def main() -> None:
     known_before_run = set(state.keys())
     discovery_state = load_discovery_state()
 
-    listing_items, next_discovery_state = discover_listing_items(
-        known_before_run, discovery_state
+    # On the first run after this upgrade, infer the previous frontier from
+    # the most recently seen cache cohort. That avoids crawling old history
+    # just because this new discovery-state file doesn't exist yet.
+    target_anchor_id = str(discovery_state.get("baseline_anchor_id") or "")
+    if not target_anchor_id and state:
+        seen_times = [
+            int(entry.get("last_seen") or entry.get("first_seen") or 0)
+            for entry in state.values()
+        ]
+        newest_seen = max(seen_times, default=0)
+        recent_cohort = [
+            entry for entry in state.values()
+            if int(entry.get("last_seen") or entry.get("first_seen") or 0) >= newest_seen - 60
+            and entry.get("id")
+        ]
+        if recent_cohort:
+            oldest_recent = min(
+                recent_cohort,
+                key=lambda entry: parse_pub_timestamp(
+                    entry.get("pub_date", ""), int(entry.get("id") or 0)
+                ),
+            )
+            target_anchor_id = str(oldest_recent["id"])
+
+    # If this is a brand-new install, use the oldest entry in the current RSS
+    # window as the initial frontier rather than backfilling arbitrary history.
+    if not target_anchor_id:
+        oldest_source_item = min(
+            source_items,
+            key=lambda item: parse_pub_timestamp(item.get("pub_date", ""), int(item["id"])),
+        )
+        target_anchor_id = oldest_source_item["id"]
+
+    listing_items, next_discovery_state, caught_up, scan_failed = discover_listing_items(
+        known_before_run, discovery_state, target_anchor_id
     )
 
-    # Prefer richer RSS metadata for its entries; add HTML listing entries for
-    # anything older than the source RSS window that catch-up scanning finds.
+    # Only advance the regular frontier after a successful scan actually reaches
+    # the previous frontier (or a known boundary). If scanning failed, leave the
+    # old frontier intact so the next successful run retries the same window.
+    if caught_up and not scan_failed:
+        oldest_source_item = min(
+            source_items,
+            key=lambda item: parse_pub_timestamp(item.get("pub_date", ""), int(item["id"])),
+        )
+        next_discovery_state["baseline_anchor_id"] = oldest_source_item["id"]
+    elif target_anchor_id:
+        next_discovery_state["baseline_anchor_id"] = target_anchor_id
+
+    # Prefer richer RSS metadata for RSS entries; add paginated HTML rows for
+    # listings older than the source RSS window that the catch-up scan finds.
     merged_items: dict[str, dict] = {item["id"]: item for item in source_items}
     for item in listing_items:
         existing = merged_items.get(item["id"])
@@ -600,9 +700,34 @@ def main() -> None:
             checked_ids.add(torrent_id)
             check_ids.append(torrent_id)
 
+    # If a previous run discovered more listings than it could classify, resume
+    # these pending records even if they have since fallen out of the source RSS.
+    for torrent_id, entry in state.items():
+        if not entry.get("status") and torrent_id not in checked_ids:
+            if should_check(entry, now):
+                checked_ids.add(torrent_id)
+                check_ids.append(torrent_id)
+
+    # Process newest items first and bound detail-page requests per job. Remaining
+    # blank-status records persist in the cache and are picked up on later runs.
+    check_ids.sort(
+        key=lambda torrent_id: parse_pub_timestamp(
+            state[torrent_id].get("pub_date", ""),
+            int(state[torrent_id].get("first_seen") or state[torrent_id].get("id") or 0),
+        ),
+        reverse=True,
+    )
+    if len(check_ids) > MAX_DETAIL_CLASSIFICATIONS_PER_RUN:
+        print(
+            f"Classification batch capped at {MAX_DETAIL_CLASSIFICATIONS_PER_RUN}; "
+            f"{len(check_ids) - MAX_DETAIL_CLASSIFICATIONS_PER_RUN} pending item(s) "
+            "will be handled on later runs."
+        )
+        check_ids = check_ids[:MAX_DETAIL_CLASSIFICATIONS_PER_RUN]
+
     print(
         f"Source RSS items: {len(source_items)}; listing rows scanned: {len(listing_items)}; "
-        f"detail pages needing inspection: {len(check_ids)}"
+        f"detail pages to inspect this run: {len(check_ids)}"
     )
     if check_ids:
         with concurrent.futures.ThreadPoolExecutor(max_workers=MAX_WORKERS) as pool:
@@ -611,7 +736,7 @@ def main() -> None:
                 for torrent_id in check_ids
             }
             for future in concurrent.futures.as_completed(futures):
-                torrent_id = futures[future]
+                torrent_id = future_to_id = futures[future]
                 try:
                     result = future.result()
                 except Exception as exc:
