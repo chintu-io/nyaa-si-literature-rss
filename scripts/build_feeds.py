@@ -532,6 +532,11 @@ def load_state() -> dict:
 
 
 def should_check(entry: dict, now: int) -> bool:
+    # Back off failed refresh attempts, but retry after the configured error interval.
+    last_error_at = int(entry.get("last_error_at") or 0)
+    if last_error_at and now - last_error_at < ERROR_RETRY_SECONDS:
+        return False
+
     checked = int(entry.get("checked_at") or 0)
     if not checked:
         return True
@@ -751,9 +756,25 @@ def main() -> None:
                         "reason": f"Unhandled classifier error: {type(exc).__name__}: {exc}",
                         "checked_at": int(time.time()),
                     }
-                state[torrent_id].update(result)
-                state[torrent_id]["id"] = torrent_id
-                print(f"  {torrent_id}: {result['status']} {result.get('formats', [])}")
+                previous = state[torrent_id]
+                previous_status = previous.get("status")
+                if result.get("status") in {"error", "unknown"} and previous_status == "classified" and previous.get("formats"):
+                    # A failed/unreadable recheck must not remove a known-good
+                    # torrent from a live feed. Keep the prior classification and
+                    # use an error timestamp to retry later with backoff.
+                    previous["last_error"] = result.get("reason", "Recheck failed or returned no readable file list.")
+                    previous["last_error_at"] = result.get("checked_at", int(time.time()))
+                    print(
+                        f"  {torrent_id}: kept previous classification "
+                        f"{previous.get('formats', [])}; recheck {result.get('status')}"
+                    )
+                else:
+                    previous.update(result)
+                    if result.get("status") == "classified":
+                        previous.pop("last_error", None)
+                        previous.pop("last_error_at", None)
+                previous["id"] = torrent_id
+                print(f"  {torrent_id}: {previous.get('status')} {previous.get('formats', [])}")
 
     # Keep the cache finite while retaining far more than one RSS window.
     if len(state) > MAX_STATE_ITEMS:
