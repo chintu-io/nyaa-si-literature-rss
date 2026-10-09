@@ -1,6 +1,6 @@
 # Nyaa.si Literature RSS & Format Classifier
 
-[![Build categorized RSS feeds](https://github.com/chintune/nyaa-si-literature-rss/actions/workflows/build-category-rss.yml/badge.svg)](https://github.com/chintune/nyaa-si-literature-rss/actions/workflows/build-category-rss.yml)
+[![Build categorized RSS feeds](https://github.com/chintu-io/nyaa-si-literature-rss/actions/workflows/build-category-rss.yml/badge.svg)](https://github.com/chintu-io/nyaa-si-literature-rss/actions/workflows/build-category-rss.yml)
 
 Separate Nyaa.si's mixed **Literature / English-translated** category into dedicated Manga, Novel, and Audiobook RSS feeds by inspecting the actual files inside each torrent. Also includes a Tampermonkey userscript that color-labels formats directly on Nyaa search results.
 
@@ -10,9 +10,9 @@ These are **live feed URLs**, not one-time downloads. Add the relevant URL to yo
 
 | Feed | File-list rule | Subscribe URL |
 |---|---|---|
-| **Manga** | `.cbz` or `.cbr` | [feeds/manga.xml](https://raw.githubusercontent.com/chintune/nyaa-si-literature-rss/main/feeds/manga.xml) |
-| **Novels** | `.epub` or `.pdf` | [feeds/novels.xml](https://raw.githubusercontent.com/chintune/nyaa-si-literature-rss/main/feeds/novels.xml) |
-| **Audiobooks** | `.m4b` | [feeds/audiobooks.xml](https://raw.githubusercontent.com/chintune/nyaa-si-literature-rss/main/feeds/audiobooks.xml) |
+| **Manga** | `.cbz` or `.cbr` | [feeds/manga.xml](https://raw.githubusercontent.com/chintu-io/nyaa-si-literature-rss/main/feeds/manga.xml) |
+| **Novels** | `.epub` or `.pdf` | [feeds/novels.xml](https://raw.githubusercontent.com/chintu-io/nyaa-si-literature-rss/main/feeds/novels.xml) |
+| **Audiobooks** | `.m4b` | [feeds/audiobooks.xml](https://raw.githubusercontent.com/chintu-io/nyaa-si-literature-rss/main/feeds/audiobooks.xml) |
 
 **Feed freshness:** GitHub Actions checks the source Nyaa.si RSS feed every 30 minutes (at minutes 7 and 37 of each hour, UTC) and republishes the generated XML to these same URLs. The `<lastBuildDate>` in each XML indicates when the feed was generated. An RSS reader may check those URLs on its own polling schedule, so the time it displays can lag behind the latest build.
 
@@ -39,7 +39,7 @@ On first adding a feed, how many existing entries ruTorrent downloads depends on
 ## Install the Tampermonkey userscript
 
 1. Install Tampermonkey in your browser.
-2. Open the [raw userscript](https://raw.githubusercontent.com/chintune/nyaa-si-literature-rss/main/nyaa-literature-format-colors.user.js). If automatic installation is not offered, copy it into a new Tampermonkey script and save.
+2. Open the [raw userscript](https://raw.githubusercontent.com/chintu-io/nyaa-si-literature-rss/main/nyaa-literature-format-colors.user.js). If automatic installation is not offered, copy it into a new Tampermonkey script and save.
 3. Visit [Nyaa.si Literature / English-translated](https://nyaa.si/?f=0&c=3_1&q=).
 
 The userscript makes background requests to torrent detail pages (it does not open tabs), colors the rows, and caches results in your browser. Use its **Retry UNKNOWN** control to retry entries it could not inspect.
@@ -58,7 +58,7 @@ The RSS builder assigns format families independently, so a mixed torrent can ap
 
 ## Freshness, coverage, and limitations
 
-- The automation runs **twice per hour**, provided GitHub Actions is enabled and the scheduled workflow succeeds. Check the [Actions page](https://github.com/chintune/nyaa-si-literature-rss/actions/workflows/build-category-rss.yml) for the latest run and its status.
+- The automation runs **twice per hour**, provided GitHub Actions is enabled and the scheduled workflow succeeds. Check the [Actions page](https://github.com/chintu-io/nyaa-si-literature-rss/actions/workflows/build-category-rss.yml) for the latest run and its status.
 - Catch-up scanning reads up to **20 listing pages per step** (roughly 1,500 rows). If that limit is reached, it saves a torrent-ID checkpoint and continues deeper on later runs. It looks up an existing checkpoint and advances by another bounded batch each run.
 - To keep each Actions job bounded, it classifies up to **250 torrent detail pages per run**; any other newly discovered entries stay in the cache as pending and are picked up by subsequent runs.
 - This is not a historical backfill of every torrent ever uploaded. It can catch delayed runs as long as Nyaa still exposes the intervening listings; torrents deleted or no longer listed before discovery can still be missed.
@@ -70,7 +70,6 @@ The RSS builder assigns format families independently, so a mixed torrent can ap
 ## Project
 
 - **Source:** [Nyaa.si](https://nyaa.si/)
-- **Repository:** [chintune/nyaa-si-literature-rss](https://github.com/chintune/nyaa-si-literature-rss)
-- **Automated build history:** [GitHub Actions](https://github.com/chintune/nyaa-si-literature-rss/actions/workflows/build-category-rss.yml)
-- **Report issues or misclassifications:** [Open a GitHub issue](https://github.com/chintune/nyaa-si-literature-rss/issues/new)
-
+- **Repository:** [chintu-io/nyaa-si-literature-rss](https://github.com/chintu-io/nyaa-si-literature-rss)
+- **Automated build history:** [GitHub Actions](https://github.com/chintu-io/nyaa-si-literature-rss/actions/workflows/build-category-rss.yml)
+- **Report issues or misclassifications:** [Open a GitHub issue](https://github.com/chintu-io/nyaa-si-literature-rss/issues/new)
