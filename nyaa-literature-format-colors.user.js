@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Nyaa Literature Format Colors
 // @namespace    https://nyaa.si/
-// @version      1.0.0
+// @version      1.1.0
 // @description  Identify manga vs novels in Nyaa's English-translated Literature results by inspecting each torrent's file list.
 // @match        https://nyaa.si/*
 // @run-at       document-idle
@@ -23,6 +23,7 @@
   const TYPE_META = {
     manga: { label: 'MANGA', hint: 'File list contains .CBZ and/or .CBR', color: '#087f73', tint: 'rgba(8, 127, 115, 0.09)' },
     novel: { label: 'NOVEL', hint: 'File list contains .EPUB and/or .PDF', color: '#6651c9', tint: 'rgba(102, 81, 201, 0.10)' },
+    audiobook: { label: 'AUDIOBOOK', hint: 'File list contains .M4B', color: '#006bb6', tint: 'rgba(0, 107, 182, 0.10)' },
     mixed: { label: 'MIXED', hint: 'File list contains both manga and novel file types', color: '#b56a00', tint: 'rgba(181, 106, 0, 0.11)' },
     unknown: { label: 'UNKNOWN', hint: 'No matching file extension found, or Nyaa did not show the file list', color: '#777777', tint: 'rgba(119, 119, 119, 0.07)' },
     checking: { label: 'CHECKING…', hint: 'Reading the torrent file list in the background', color: '#737373', tint: 'rgba(119, 119, 119, 0.05)' },
@@ -150,10 +151,13 @@
       const names = files.map(fileNameFromListItem).filter(Boolean);
       const hasManga = names.some(name => /\.(?:cbz|cbr)$/i.test(name));
       const hasNovel = names.some(name => /\.(?:epub|pdf)$/i.test(name));
-      if (hasManga && hasNovel) return { type: 'mixed', reason: 'File list contains both manga and novel file types.' };
+      const hasAudiobook = names.some(name => /\.m4b$/i.test(name));
+      const familyCount = [hasManga, hasNovel, hasAudiobook].filter(Boolean).length;
+      if (familyCount > 1) return { type: 'mixed', reason: 'File list contains multiple format families (manga, novel/document, and/or audiobook).' };
       if (hasManga) return { type: 'manga', reason: 'Detected .CBZ and/or .CBR file(s).' };
       if (hasNovel) return { type: 'novel', reason: 'Detected .EPUB and/or .PDF file(s).' };
-      return { type: 'unknown', reason: names.length ? 'No .CBZ, .CBR, .EPUB, or .PDF files were found.' : 'No individual file names could be read.' };
+      if (hasAudiobook) return { type: 'audiobook', reason: 'Detected .M4B audiobook file(s).' };
+      return { type: 'unknown', reason: names.length ? 'No .CBZ, .CBR, .EPUB, .PDF, or .M4B files were found.' : 'No individual file names could be read.' };
     } catch (_) {
       return { type: 'error', reason: 'The detail page could not be inspected.' };
     } finally {
@@ -172,7 +176,7 @@
   function applyClassification(item, type, reason = '') {
     const safeType = type === 'error' ? 'unknown' : type;
     const meta = TYPE_META[safeType] || TYPE_META.unknown;
-    item.row.classList.remove(...['manga', 'novel', 'mixed', 'unknown', 'checking'].map(t => `${SCRIPT_PREFIX}-${t}`));
+    item.row.classList.remove(...['manga', 'novel', 'audiobook', 'mixed', 'unknown', 'checking'].map(t => `${SCRIPT_PREFIX}-${t}`));
     item.row.classList.add(`${SCRIPT_PREFIX}-${safeType}`);
     item.row.dataset.nyaaFormatType = safeType;
 
@@ -198,7 +202,8 @@
       <div class="nyaa-ft-legend">
         <span><i class="nyaa-ft-swatch swatch-manga"></i>Manga <small>.CBZ / .CBR</small></span>
         <span><i class="nyaa-ft-swatch swatch-novel"></i>Novel <small>.EPUB / .PDF</small></span>
-        <span><i class="nyaa-ft-swatch swatch-mixed"></i>Mixed <small>both types</small></span>
+        <span><i class="nyaa-ft-swatch swatch-audiobook"></i>Audiobook <small>.M4B</small></span>
+        <span><i class="nyaa-ft-swatch swatch-mixed"></i>Mixed <small>multiple types</small></span>
         <span><i class="nyaa-ft-swatch swatch-unknown"></i>Unknown <small>not identified</small></span>
       </div>
       <div class="nyaa-ft-panel-bottom"><span class="nyaa-ft-note">Checks detail pages in the background; no tabs are opened. Results are cached in this browser.</span><button type="button" class="nyaa-ft-retry" data-action="retry-unknown">Retry UNKNOWN</button></div>`;
@@ -208,10 +213,10 @@
   function updatePanel(prefix = 'Scan') {
     const status = panel.querySelector('.nyaa-ft-status');
     const count = type => rows.filter(x => x.row.dataset.nyaaFormatType === type).length;
-    const manga = count('manga'), novel = count('novel'), mixed = count('mixed'), unknown = count('unknown');
-    const checking = rows.length - manga - novel - mixed - unknown;
-    if (checking === 0) status.textContent = `${rows.length} rows · ${manga} manga · ${novel} novels · ${mixed} mixed · ${unknown} unknown${failedCount ? ` · ${failedCount} request failure(s)` : ''}`;
-    else status.textContent = `${prefix}: ${completed}/${rows.length} reviewed · ${checking} pending · ${manga} manga · ${novel} novels · ${mixed} mixed`;
+    const manga = count('manga'), novel = count('novel'), audiobook = count('audiobook'), mixed = count('mixed'), unknown = count('unknown');
+    const checking = rows.length - manga - novel - audiobook - mixed - unknown;
+    if (checking === 0) status.textContent = `${rows.length} rows · ${manga} manga · ${novel} novels · ${audiobook} audiobooks · ${mixed} mixed · ${unknown} unknown${failedCount ? ` · ${failedCount} request failure(s)` : ''}`;
+    else status.textContent = `${prefix}: ${completed}/${rows.length} reviewed · ${checking} pending · ${manga} manga · ${novel} novels · ${audiobook} audiobooks · ${mixed} mixed`;
   }
   function setStatus(message) { panel.querySelector('.nyaa-ft-status').textContent = message; }
   function readCache() {
@@ -244,19 +249,22 @@
       #nyaa-literature-format-colors-panel .nyaa-ft-legend small { opacity:.72; }
       #nyaa-literature-format-colors-panel .nyaa-ft-swatch { display:inline-block;width:10px;height:10px;border-radius:2px; }
       #nyaa-literature-format-colors-panel .swatch-manga { background:#087f73; } #nyaa-literature-format-colors-panel .swatch-novel { background:#6651c9; }
-      #nyaa-literature-format-colors-panel .swatch-mixed { background:#b56a00; } #nyaa-literature-format-colors-panel .swatch-unknown { background:#777; }
+      #nyaa-literature-format-colors-panel .swatch-audiobook { background:#006bb6; } #nyaa-literature-format-colors-panel .swatch-mixed { background:#b56a00; } #nyaa-literature-format-colors-panel .swatch-unknown { background:#777; }
       #nyaa-literature-format-colors-panel .nyaa-ft-note { opacity:.72;font-size:12px; }
       #nyaa-literature-format-colors-panel .nyaa-ft-retry { border:1px solid #888;border-radius:4px;padding:3px 8px;color:inherit;background:transparent;cursor:pointer; }
       .torrent-list .nyaa-ft-badge { display:inline-block;vertical-align:1px;margin-left:7px;padding:2px 5px;border:1px solid currentColor;border-radius:3px;font-size:10px;line-height:1.2;font-weight:700;letter-spacing:.035em;white-space:nowrap; }
       .torrent-list .nyaa-ft-badge-manga { color:#087f73;background:#d8f2ee; } .torrent-list .nyaa-ft-badge-novel { color:#5944b4;background:#e9e4ff; }
+      .torrent-list .nyaa-ft-badge-audiobook { color:#00558f;background:#d9edff; }
       .torrent-list .nyaa-ft-badge-mixed { color:#925400;background:#ffedc8; } .torrent-list .nyaa-ft-badge-unknown,.torrent-list .nyaa-ft-badge-checking { color:#666;background:#eee; }
       .torrent-list tbody tr.nyaa-ft-manga>td:first-child { border-left:5px solid #087f73!important; }
       .torrent-list tbody tr.nyaa-ft-novel>td:first-child { border-left:5px solid #6651c9!important; }
+      .torrent-list tbody tr.nyaa-ft-audiobook>td:first-child { border-left:5px solid #006bb6!important; }
       .torrent-list tbody tr.nyaa-ft-mixed>td:first-child { border-left:5px solid #b56a00!important; }
       .torrent-list tbody tr.nyaa-ft-unknown>td:first-child,.torrent-list tbody tr.nyaa-ft-checking>td:first-child { border-left:5px solid #888!important; }
       /* Tint normal rows only, preserving Nyaa's native colored status rows. */
       .torrent-list tbody tr.nyaa-ft-manga.default>td { background-color:rgba(8,127,115,.075)!important; }
       .torrent-list tbody tr.nyaa-ft-novel.default>td { background-color:rgba(102,81,201,.085)!important; }
+      .torrent-list tbody tr.nyaa-ft-audiobook.default>td { background-color:rgba(0,107,182,.085)!important; }
       .torrent-list tbody tr.nyaa-ft-mixed.default>td { background-color:rgba(181,106,0,.09)!important; }
       .torrent-list tbody tr.nyaa-ft-unknown.default>td,.torrent-list tbody tr.nyaa-ft-checking.default>td { background-color:rgba(119,119,119,.035)!important; }
       @media(max-width:700px) { #nyaa-literature-format-colors-panel .nyaa-ft-panel-top { align-items:flex-start; } #nyaa-literature-format-colors-panel .nyaa-ft-status { width:100%; } }
