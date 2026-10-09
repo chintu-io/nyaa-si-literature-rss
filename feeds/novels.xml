@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0">
+  <channel>
+    <title>Nyaa Literature — Novels (EPUB/PDF)</title>
+    <link>https://nyaa.si/?f=0&amp;c=3_1&amp;q=</link>
+    <description>Generated from Nyaa Literature / English-translated; this feed will populate after the first successful workflow run.</description>
+    <language>en</language>
+    <ttl>30</ttl>
+  </channel>
+</rss>
