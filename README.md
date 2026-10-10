@@ -38,7 +38,15 @@ On first adding a feed, how many existing entries ruTorrent downloads depends on
 
 ## Install the Tampermonkey userscript
 
-1. Install Tampermonkey in your browser.
+The userscript turns Nyaa's otherwise mixed Literature listing into an at-a-glance format guide: **Manga rows in teal, novels in purple, audiobooks in blue, mixed releases in amber, and unclassified items in grey.** It checks torrent detail pages in the background without opening extra tabs, then caches the results in your browser.
+
+### Demo: format detection in action
+
+![Nyaa.si Literature format classifier userscript demo — manga, novels, audiobooks, mixed, and unknown formats color-coded in the results table](docs/nyaa-format-classifier-demo.jpg)
+
+*The summary bar counts the visible results by detected format, while the matching row colors and badges let you spot manga, novels, and audiobooks immediately. The Retry UNKNOWN control lets you retry entries the script could not inspect.*
+
+1. Install [Tampermonkey](https://www.tampermonkey.net/) in your browser.
 2. Open the [raw userscript](https://raw.githubusercontent.com/chintu-io/nyaa-si-literature-rss/main/nyaa-literature-format-colors.user.js). If automatic installation is not offered, copy it into a new Tampermonkey script and save.
 3. Visit [Nyaa.si Literature / English-translated](https://nyaa.si/?f=0&c=3_1&q=).
 
