@@ -102,13 +102,10 @@ class FileListParser(HTMLParser):
 
 
 def request_bytes(url: str) -> bytes:
+    """Fetch a URL with polite pacing and retries for transient network failures."""
     global _next_request_at
-    # Keep requests politely spaced even when two workers are enabled.
-    with _pacing_lock:
-        wait = _next_request_at - time.monotonic()
-        if wait > 0:
-            time.sleep(wait)
-        _next_request_at = time.monotonic() + MIN_REQUEST_INTERVAL_SECONDS
+    max_attempts = 3
+    retry_delay_seconds = 2
 
     req = urllib.request.Request(
         url,
@@ -117,10 +114,34 @@ def request_bytes(url: str) -> bytes:
             "Accept": "application/rss+xml, application/xml, text/html;q=0.9, */*;q=0.8",
         },
     )
-    with urllib.request.urlopen(req, timeout=REQUEST_TIMEOUT_SECONDS) as response:
-        if response.status != 200:
-            raise RuntimeError(f"HTTP {response.status} for {url}")
-        return response.read()
+
+    for attempt in range(1, max_attempts + 1):
+        # Keep requests politely spaced even when two workers are enabled.
+        with _pacing_lock:
+            wait = _next_request_at - time.monotonic()
+            if wait > 0:
+                time.sleep(wait)
+            _next_request_at = time.monotonic() + MIN_REQUEST_INTERVAL_SECONDS
+
+        try:
+            with urllib.request.urlopen(req, timeout=REQUEST_TIMEOUT_SECONDS) as response:
+                if response.status != 200:
+                    raise RuntimeError(f"HTTP {response.status} for {url}")
+                return response.read()
+        except (urllib.error.URLError, TimeoutError, OSError, RuntimeError) as exc:
+            if attempt == max_attempts:
+                raise RuntimeError(
+                    f"Request failed after {max_attempts} attempts for {url}: {exc}"
+                ) from exc
+
+            delay = retry_delay_seconds * attempt
+            print(
+                f"Request attempt {attempt}/{max_attempts} failed for {url}: {exc}. "
+                f"Retrying in {delay}s."
+            )
+            time.sleep(delay)
+
+    raise RuntimeError(f"Request failed unexpectedly for {url}")
 
 
 def local_name(tag: str) -> str:
