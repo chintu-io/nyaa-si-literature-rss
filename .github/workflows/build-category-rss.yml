@@ -31,7 +31,7 @@ jobs:
       - name: Check out repository
         uses: actions/checkout@v4
         with:
-          persist-credentials: true
+          persist-credentials: false
 
       - name: Set up Python
         uses: actions/setup-python@v5
@@ -48,6 +48,8 @@ jobs:
         run: python scripts/build_feeds.py
 
       - name: Commit updated feeds and classification cache
+        env:
+          GH_TOKEN: ${{ github.token }}
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
@@ -56,5 +58,5 @@ jobs:
             echo "No feed or cache changes to commit."
           else
             git commit -m "Refresh categorized RSS feeds"
-            git push
+            git -c http.https://github.com/.extraheader="AUTHORIZATION: basic $(printf 'x-access-token:%s' "$GH_TOKEN" | base64 -w0)" push
           fi

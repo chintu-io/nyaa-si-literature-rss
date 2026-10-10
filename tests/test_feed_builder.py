@@ -1,6 +1,7 @@
 import importlib.util
 from pathlib import Path
 import unittest
+import tempfile
 from unittest.mock import patch
 
 
@@ -136,6 +137,50 @@ class CatchUpScannerTests(unittest.TestCase):
         self.assertEqual(next_state.get("resume_after_id"), "25")
         self.assertEqual(next_state.get("resume_after_page"), 2)
         self.assertTrue(next_state.get("catch_up_pending"))
+
+
+
+class PersistentStateSafetyTests(unittest.TestCase):
+    def test_missing_state_files_start_empty(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary_directory:
+            cache_path = Path(temporary_directory) / "missing-cache.json"
+            discovery_path = Path(temporary_directory) / "missing-discovery.json"
+            with patch.object(builder, "STATE_PATH", cache_path):
+                self.assertEqual(builder.load_state(), {})
+            with patch.object(builder, "DISCOVERY_STATE_PATH", discovery_path):
+                self.assertEqual(builder.load_discovery_state(), {})
+
+    def test_malformed_existing_classification_cache_fails_closed(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary_directory:
+            path = Path(temporary_directory) / "classification-cache.json"
+            path.write_text("{not valid JSON", encoding="utf-8")
+            with patch.object(builder, "STATE_PATH", path):
+                with self.assertRaisesRegex(RuntimeError, "refusing to continue"):
+                    builder.load_state()
+
+    def test_invalid_classification_cache_entries_fail_closed(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary_directory:
+            path = Path(temporary_directory) / "classification-cache.json"
+            path.write_text('{"123": "not an object"}', encoding="utf-8")
+            with patch.object(builder, "STATE_PATH", path):
+                with self.assertRaisesRegex(RuntimeError, "non-object entry"):
+                    builder.load_state()
+
+    def test_malformed_existing_discovery_state_fails_closed(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary_directory:
+            path = Path(temporary_directory) / "discovery-state.json"
+            path.write_text("{not valid JSON", encoding="utf-8")
+            with patch.object(builder, "DISCOVERY_STATE_PATH", path):
+                with self.assertRaisesRegex(RuntimeError, "refusing to continue"):
+                    builder.load_discovery_state()
+
+    def test_non_object_discovery_state_fails_closed(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary_directory:
+            path = Path(temporary_directory) / "discovery-state.json"
+            path.write_text("[]", encoding="utf-8")
+            with patch.object(builder, "DISCOVERY_STATE_PATH", path):
+                with self.assertRaisesRegex(RuntimeError, "JSON object"):
+                    builder.load_discovery_state()
 
 
 if __name__ == "__main__":

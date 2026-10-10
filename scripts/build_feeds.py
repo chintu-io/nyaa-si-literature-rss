@@ -370,12 +370,25 @@ def fetch_listing_page(page_number: int) -> list[dict]:
     return results
 
 
-def load_discovery_state() -> dict:
-    try:
-        value = json.loads(DISCOVERY_STATE_PATH.read_text(encoding="utf-8"))
-        return value if isinstance(value, dict) else {}
-    except (OSError, json.JSONDecodeError):
+def load_json_state_object(path: Path, label: str) -> dict:
+    """Load persisted JSON state, failing closed rather than silently resetting it."""
+    if not path.exists():
         return {}
+    try:
+        value = json.loads(path.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError) as exc:
+        raise RuntimeError(
+            f"Existing {label} is unreadable; refusing to continue so it is not overwritten."
+        ) from exc
+    if not isinstance(value, dict):
+        raise RuntimeError(
+            f"Existing {label} must be a JSON object; refusing to continue so it is not overwritten."
+        )
+    return value
+
+
+def load_discovery_state() -> dict:
+    return load_json_state_object(DISCOVERY_STATE_PATH, "discovery state")
 
 
 def save_discovery_state(value: dict) -> None:
@@ -543,13 +556,18 @@ def discover_listing_items(
 
 
 def load_state() -> dict:
-    if not STATE_PATH.exists():
-        return {}
-    try:
-        state = json.loads(STATE_PATH.read_text(encoding="utf-8"))
-        return state if isinstance(state, dict) else {}
-    except (json.JSONDecodeError, OSError):
-        return {}
+    state = load_json_state_object(STATE_PATH, "classification cache")
+    if any(not isinstance(entry, dict) for entry in state.values()):
+        raise RuntimeError(
+            "Existing classification cache contains a non-object entry; "
+            "refusing to continue so it is not overwritten."
+        )
+    if any(str(entry.get("id", "")) != str(key) for key, entry in state.items()):
+        raise RuntimeError(
+            "Existing classification cache has an ID/key mismatch; "
+            "refusing to continue so it is not overwritten."
+        )
+    return state
 
 
 def should_check(entry: dict, now: int) -> bool:
