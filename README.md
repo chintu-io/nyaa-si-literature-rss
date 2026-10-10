@@ -42,7 +42,7 @@ The userscript turns Nyaa's otherwise mixed Literature listing into an at-a-glan
 
 ### Demo: format detection in action
 
-![Nyaa.si Literature format classifier userscript demo — manga, novels, audiobooks, mixed, and unknown formats color-coded in the results table](docs/nyaa-format-classifier-demo.jpg)
+![Nyaa.si Literature format classifier userscript demo — manga, novels, audiobooks, mixed, and unknown formats color-coded in the results table](nyaa-format-classifier-demo.jpg)
 
 *The summary bar counts the visible results by detected format, while the matching row colors and badges let you spot manga, novels, and audiobooks immediately. The Retry UNKNOWN control lets you retry entries the script could not inspect.*
 
