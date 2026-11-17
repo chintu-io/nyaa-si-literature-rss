@@ -8797,17 +8797,21 @@
   },
   "2184478": {
     "id": "2184478",
-    "formats": [],
-    "extensions": [],
-    "status": "unknown",
-    "reason": "No torrent-file-list container was found on the detail page.",
-    "checked_at": 1794308142,
+    "formats": [
+      "manga"
+    ],
+    "extensions": [
+      ".cbz"
+    ],
+    "status": "classified",
+    "reason": "Matched file extensions: .cbz",
+    "checked_at": 1794934819,
     "title": "The Unforgiving Priestess ~Whisked Away and All Are Guilty!~ Ch.1 [Digital] [BookWalker]",
     "link": "https://nyaa.si/download/2184478.torrent",
     "pub_date": "Tue, 10 Nov 2026 07:36:56 -0000",
     "description": "<a href=\"https://nyaa.si/view/2184478\">#2184478 | The Unforgiving Priestess ~Whisked Away and All Are Guilty!~ Ch.1 [Digital] [BookWalker]</a> | 77.8 MiB | Literature - English-translated | 5D403CFE79FD12B88517EC1545AC550C9E16AD4F",
     "guid": "https://nyaa.si/view/2184478",
-    "last_seen": 1794872910,
+    "last_seen": 1794934817,
     "first_seen": 1794308140
   },
   "2184473": {
@@ -9122,7 +9126,7 @@
     "pub_date": "Tue, 10 Nov 2026 17:57:43 -0000",
     "description": "<a href=\"https://nyaa.si/view/2184709\">#2184709 | Hajime no Ippo - Fighting Spirit! 224-605 (2026) (Digital) (Aquila)</a> | 3.6 GiB | Literature - English-translated | B8F64B53F2C2039419648E0B8DE2CB26637440E6",
     "guid": "https://nyaa.si/view/2184709",
-    "last_seen": 1794900587,
+    "last_seen": 1794934817,
     "first_seen": 1794335596
   },
   "2184646": {
@@ -9141,7 +9145,7 @@
     "pub_date": "Tue, 10 Nov 2026 15:48:42 -0000",
     "description": "<a href=\"https://nyaa.si/view/2184646\">#2184646 | Shadow Slave: Child of Shadows: Shadow Slave, Book 1  (Audiobook) [Troglodyte]</a> | 843.2 MiB | Literature - English-translated | C91A250A75657E3885C3396081973D9C1C7C93EC",
     "guid": "https://nyaa.si/view/2184646",
-    "last_seen": 1794900587,
+    "last_seen": 1794934817,
     "first_seen": 1794335596
   },
   "2184644": {
@@ -9160,7 +9164,7 @@
     "pub_date": "Tue, 10 Nov 2026 15:46:56 -0000",
     "description": "<a href=\"https://nyaa.si/view/2184644\">#2184644 | Orc Eroica, Vol. 4 (Audiobook) [Troglodyte]</a> | 290.4 MiB | Literature - English-translated | 35E36C52E7FBF806FF15B1799A00A429BA9575BB",
     "guid": "https://nyaa.si/view/2184644",
-    "last_seen": 1794900587,
+    "last_seen": 1794934817,
     "first_seen": 1794335596
   },
   "2184759": {
@@ -9175,7 +9179,7 @@
     "pub_date": "Tue, 10 Nov 2026 20:33:56 -0000",
     "description": "<a href=\"https://nyaa.si/view/2184759\">#2184759 | Nina the Starry Bride v01-19 (2021-2026) (Digital) (1r0n, Rillant)</a> | 5.9 GiB | Literature - English-translated | 30534A1E514FC32C6F05289105D61DAF8B83DB9B",
     "guid": "https://nyaa.si/view/2184759",
-    "last_seen": 1794900587,
+    "last_seen": 1794934817,
     "first_seen": 1794353974
   },
   "2184756": {
@@ -9190,7 +9194,7 @@
     "pub_date": "Tue, 10 Nov 2026 20:11:39 -0000",
     "description": "<a href=\"https://nyaa.si/view/2184756\">#2184756 | N v01 (2026) (Digital) (Rillant)</a> | 74.6 MiB | Literature - English-translated | 9C42B42BBA1DA869965BCAA33CB59B128FD8AD73",
     "guid": "https://nyaa.si/view/2184756",
-    "last_seen": 1794900587,
+    "last_seen": 1794934817,
     "first_seen": 1794353974
   },
   "2184783": {
@@ -9209,7 +9213,7 @@
     "pub_date": "Tue, 10 Nov 2026 23:59:12 -0000",
     "description": "<a href=\"https://nyaa.si/view/2184783\">#2184783 | The Angel Next Door Spoils Me Rotten v01-05 [Audiobook] [Yen Audio] [Ushi &amp; Oak]</a> | 1.5 GiB | Literature - English-translated | 4F0A31ACF188E9A815C3F93E6E95E07662CA494C",
     "guid": "https://nyaa.si/view/2184783",
-    "last_seen": 1794900587,
+    "last_seen": 1794934817,
     "first_seen": 1794375685
   },
   "2184782": {
@@ -9228,7 +9232,7 @@
     "pub_date": "Tue, 10 Nov 2026 23:59:10 -0000",
     "description": "<a href=\"https://nyaa.si/view/2184782\">#2184782 | Secrets of the Silent Witch v01-04.5 [Audiobook] [Yen Audio] [Ushi &amp; Oak]</a> | 2.2 GiB | Literature - English-translated | 8DD4365808CA07CB8BAFB196F414E1200DC1B66E",
     "guid": "https://nyaa.si/view/2184782",
-    "last_seen": 1794900587,
+    "last_seen": 1794934817,
     "first_seen": 1794375685
   },
   "2184781": {
@@ -9243,7 +9247,7 @@
     "pub_date": "Tue, 10 Nov 2026 23:59:08 -0000",
     "description": "<a href=\"https://nyaa.si/view/2184781\">#2184781 | Orc Eroica - Conjecture Chronicles v01-04 [Audiobook] [Yen Audio] [Ushi &amp; Troglodyte &amp; Oak]</a> | 1.1 GiB | Literature - English-translated | C29FF2D6E2042A1905BC192C153E2E123DF31FAF",
     "guid": "https://nyaa.si/view/2184781",
-    "last_seen": 1794900587,
+    "last_seen": 1794934817,
     "first_seen": 1794375685
   },
   "2184780": {
@@ -9262,7 +9266,7 @@
     "pub_date": "Tue, 10 Nov 2026 23:59:06 -0000",
     "description": "<a href=\"https://nyaa.si/view/2184780\">#2184780 | Bofuri - I Don&#39;t Want to Get Hurt, so I&#39;ll Max Out My Defense v01-04 [Audiobook] [Yen Audio] [Ushi &amp; Oak]</a> | 1.0 GiB | Literature - English-translated | B415A5414F154150050EEF48F65FBB6167640A62",
     "guid": "https://nyaa.si/view/2184780",
-    "last_seen": 1794900587,
+    "last_seen": 1794934817,
     "first_seen": 1794375685
   },
   "2184779": {
@@ -9281,7 +9285,7 @@
     "pub_date": "Tue, 10 Nov 2026 23:59:04 -0000",
     "description": "<a href=\"https://nyaa.si/view/2184779\">#2184779 | Baccano! v01-11 [Audiobook] [Yen Audio] [Ushi &amp; Oak]</a> | 4.2 GiB | Literature - English-translated | D06C90BE8DA2CF27CAB5E7079097963CA30333F6",
     "guid": "https://nyaa.si/view/2184779",
-    "last_seen": 1794900587,
+    "last_seen": 1794934817,
     "first_seen": 1794375685
   },
   "2184778": {
@@ -9300,7 +9304,7 @@
     "pub_date": "Tue, 10 Nov 2026 23:59:02 -0000",
     "description": "<a href=\"https://nyaa.si/view/2184778\">#2184778 | Alya Sometimes Hides Her Feelings in Russian v01-09 [Audiobook] [Yen Audio] [Ushi &amp; Oak]</a> | 3.9 GiB | Literature - English-translated | 28ACF07BE675871B3ADD2C035B0ED749E03047D6",
     "guid": "https://nyaa.si/view/2184778",
-    "last_seen": 1794900587,
+    "last_seen": 1794934817,
     "first_seen": 1794375685
   },
   "2184776": {
@@ -9319,7 +9323,7 @@
     "pub_date": "Tue, 10 Nov 2026 23:50:05 -0000",
     "description": "<a href=\"https://nyaa.si/view/2184776\">#2184776 | (Partial) Weekly K Manga Chapter Updates - Week 46 2026 (Digital) (The K-Team)</a> | 977.0 MiB | Literature - English-translated | 257A9B8FD09F0AB2121ED24B95BDB5AA01D3DBD1",
     "guid": "https://nyaa.si/view/2184776",
-    "last_seen": 1794900587,
+    "last_seen": 1794934817,
     "first_seen": 1794375685
   },
   "2185137": {
@@ -9338,7 +9342,7 @@
     "pub_date": "Wed, 11 Nov 2026 18:31:22 -0000",
     "description": "<a href=\"https://nyaa.si/view/2185137\">#2185137 | Hajime no Ippo - Fighting Spirit! 001-605 as v001-065 (Digital-Compilation) (1r0n, Rillant, Aquila)</a> | 5.9 GiB | Literature - English-translated | 03BB2D8FC95F3EC4F0976DFEACBF9DA89F9AA30D",
     "guid": "https://nyaa.si/view/2185137",
-    "last_seen": 1794900587,
+    "last_seen": 1794934817,
     "first_seen": 1794431483
   },
   "2185135": {
@@ -9353,7 +9357,7 @@
     "pub_date": "Wed, 11 Nov 2026 18:21:26 -0000",
     "description": "<a href=\"https://nyaa.si/view/2185135\">#2185135 | Nura - Rise of the Yokai Clan (2011-2015) (Digital) (Rillant)</a> | 5.9 GiB | Literature - English-translated | 57B03E728565749EB11E8D1B9B1CCB312EEFF2CD",
     "guid": "https://nyaa.si/view/2185135",
-    "last_seen": 1794900587,
+    "last_seen": 1794934817,
     "first_seen": 1794431483
   },
   "2185195": {
@@ -9372,7 +9376,7 @@
     "pub_date": "Wed, 11 Nov 2026 21:48:51 -0000",
     "description": "<a href=\"https://nyaa.si/view/2185195\">#2185195 | What&#39;s with the Bag, Kamiyama-san v01-04 (2025-2026) (Digital) (Ushi)</a> | 1.1 GiB | Literature - English-translated | 289F5E6C2A6E0DB8AD5AE0E67446F18923F23E9B",
     "guid": "https://nyaa.si/view/2185195",
-    "last_seen": 1794900587,
+    "last_seen": 1794934817,
     "first_seen": 1794450370
   },
   "2185194": {
@@ -9387,7 +9391,7 @@
     "pub_date": "Wed, 11 Nov 2026 21:47:51 -0000",
     "description": "<a href=\"https://nyaa.si/view/2185194\">#2185194 | Villainess Level 99 v01-05 (2023-2026) (Digital) (DigitalMangaFan, Ushi)</a> | 334.7 MiB | Literature - English-translated | 228DA6F882EFB85F1934AEBB2CE98DA8785C7CE3",
     "guid": "https://nyaa.si/view/2185194",
-    "last_seen": 1794900587,
+    "last_seen": 1794934817,
     "first_seen": 1794450370
   },
   "2185192": {
@@ -9406,7 +9410,7 @@
     "pub_date": "Wed, 11 Nov 2026 21:46:37 -0000",
     "description": "<a href=\"https://nyaa.si/view/2185192\">#2185192 | The Ragnarok System of the Desperate Reincarnated Demon Lord and the Seven Aggressive Maidens v01-03 (2025-2026) (Digital) (1r0n, Ushi)</a> | 253.4 MiB | Literature - English-translated | FFAC1766C10D933CB1053D10D81C14B3FD5BE4FE",
     "guid": "https://nyaa.si/view/2185192",
-    "last_seen": 1794900587,
+    "last_seen": 1794934817,
     "first_seen": 1794450370
   },
   "2185191": {
@@ -9421,7 +9425,7 @@
     "pub_date": "Wed, 11 Nov 2026 21:46:10 -0000",
     "description": "<a href=\"https://nyaa.si/view/2185191\">#2185191 | The Holy Grail of Eris v01-12 (2022-2026) (Digital) (1r0n, Ushi)</a> | 1.1 GiB | Literature - English-translated | 1DA1DC0BF369441C153660E2B01D59572CB7D2F5",
     "guid": "https://nyaa.si/view/2185191",
-    "last_seen": 1794900587,
+    "last_seen": 1794934817,
     "first_seen": 1794450370
   },
   "2185190": {
@@ -9436,7 +9440,7 @@
     "pub_date": "Wed, 11 Nov 2026 21:45:44 -0000",
     "description": "<a href=\"https://nyaa.si/view/2185190\">#2185190 | The Eminence in Shadow v01-15 (2021-2026) (Digital) (1r0n, Ushi)</a> | 987.8 MiB | Literature - English-translated | 17ACD96843A6944F78C877CA650B96AD28CC94C6",
     "guid": "https://nyaa.si/view/2185190",
-    "last_seen": 1794900587,
+    "last_seen": 1794934817,
     "first_seen": 1794450370
   },
   "2185188": {
@@ -9451,7 +9455,7 @@
     "pub_date": "Wed, 11 Nov 2026 21:44:31 -0000",
     "description": "<a href=\"https://nyaa.si/view/2185188\">#2185188 | Succubus &amp; Hitman v01-11 (2022-2026) (Digital) (1r0n, Ushi)</a> | 2.9 GiB | Literature - English-translated | E94EFC87966A5DBF7691A5176268901096D48E11",
     "guid": "https://nyaa.si/view/2185188",
-    "last_seen": 1794900587,
+    "last_seen": 1794934817,
     "first_seen": 1794450370
   },
   "2185187": {
@@ -9470,7 +9474,7 @@
     "pub_date": "Wed, 11 Nov 2026 21:44:09 -0000",
     "description": "<a href=\"https://nyaa.si/view/2185187\">#2185187 | Hideout - Masasumi Kakizaki (2026) (Digital) (Ushi)</a> | 373.0 MiB | Literature - English-translated | 8D11A5BAAEEDC56F555B9EEE7914B3B84CFB41CA",
     "guid": "https://nyaa.si/view/2185187",
-    "last_seen": 1794900587,
+    "last_seen": 1794934817,
     "first_seen": 1794450370
   },
   "2185186": {
@@ -9489,7 +9493,7 @@
     "pub_date": "Wed, 11 Nov 2026 21:43:48 -0000",
     "description": "<a href=\"https://nyaa.si/view/2185186\">#2185186 | From Old Country Bumpkin to Master Swordsman v01-06 (2024-2026) (Digital) (1r0n, Ushi)</a> | 465.0 MiB | Literature - English-translated | 50D88822FC8239422FDF654083E26FA26713062E",
     "guid": "https://nyaa.si/view/2185186",
-    "last_seen": 1794900587,
+    "last_seen": 1794934817,
     "first_seen": 1794450370
   },
   "2185185": {
@@ -9508,7 +9512,7 @@
     "pub_date": "Wed, 11 Nov 2026 21:43:22 -0000",
     "description": "<a href=\"https://nyaa.si/view/2185185\">#2185185 | Crybaby Love Song (2026) (Digital) (Ushi)</a> | 224.5 MiB | Literature - English-translated | 575E9D81C90AED4F7D632B6508A6F92BBD0D9CB9",
     "guid": "https://nyaa.si/view/2185185",
-    "last_seen": 1794900587,
+    "last_seen": 1794934817,
     "first_seen": 1794450370
   },
   "2185272": {
@@ -9523,7 +9527,7 @@
     "pub_date": "Thu, 12 Nov 2026 05:44:10 -0000",
     "description": "<a href=\"https://nyaa.si/view/2185272\">#2185272 | Imaizumi Brings All the Gals to His House v01-07 (2024-2026) (Digital) (kaOak)</a> | 1.1 GiB | Literature - English-translated | CEF1760A24954601C7FE2FF9076B98BF281D7CF3",
     "guid": "https://nyaa.si/view/2185272",
-    "last_seen": 1794900587,
+    "last_seen": 1794934817,
     "first_seen": 1794478117
   },
   "2185254": {
@@ -9542,7 +9546,7 @@
     "pub_date": "Thu, 12 Nov 2026 03:27:36 -0000",
     "description": "<a href=\"https://nyaa.si/view/2185254\">#2185254 | Too Many Losing Heroines! Short Stories [Seven Seas] [HaveIMentionedThatTiaraIsBestGirl]</a> | 11.7 MiB | Literature - English-translated | ED32C7C96322DB41DAC037FB69F6AF9522D04B8E",
     "guid": "https://nyaa.si/view/2185254",
-    "last_seen": 1794900587,
+    "last_seen": 1794934817,
     "first_seen": 1794478117
   },
   "2185253": {
@@ -9557,7 +9561,7 @@
     "pub_date": "Thu, 12 Nov 2026 03:27:12 -0000",
     "description": "<a href=\"https://nyaa.si/view/2185253\">#2185253 | The Weakest Tamer Began a Journey to Pick Up Trash v01-14 [Seven Seas] [Stick]</a> | 194.6 MiB | Literature - English-translated | 10F23D90CBB6490EAABB67E519E57418962CEDE4",
     "guid": "https://nyaa.si/view/2185253",
-    "last_seen": 1794900587,
+    "last_seen": 1794934817,
     "first_seen": 1794478117
   },
   "2185469": {
@@ -9572,7 +9576,7 @@
     "pub_date": "Thu, 12 Nov 2026 22:01:49 -0000",
     "description": "<a href=\"https://nyaa.si/view/2185469\">#2185469 | ONIMAI - I&#39;m Now Your Sister! v01-11 (2021-2026) (Digital) (Sticky Oak)</a> | 2.2 GiB | Literature - English-translated | ABFE8418700F1018EAFF059E71F03004BA3B22A2",
     "guid": "https://nyaa.si/view/2185469",
-    "last_seen": 1794900587,
+    "last_seen": 1794934817,
     "first_seen": 1794527283
   },
   "2185467": {
@@ -9591,7 +9595,7 @@
     "pub_date": "Thu, 12 Nov 2026 21:42:38 -0000",
     "description": "<a href=\"https://nyaa.si/view/2185467\">#2185467 | Ghoul Work, Kurose v01 (2026) (Digital) (Rillant)</a> | 272.6 MiB | Literature - English-translated | 5749B2AFEA66A982C846E581A8FF200FCB11DBE6",
     "guid": "https://nyaa.si/view/2185467",
-    "last_seen": 1794900587,
+    "last_seen": 1794934817,
     "first_seen": 1794527283
   },
   "2185612": {
@@ -9606,7 +9610,7 @@
     "pub_date": "Fri, 13 Nov 2026 13:52:54 -0000",
     "description": "<a href=\"https://nyaa.si/view/2185612\">#2185612 | Manga Million Chapter Update - November 2026 (2026) (Digital) (Rillant)</a> | 1.6 GiB | Literature - English-translated | 8736DF60BA8BAD1F323105FBC46C895FA1BEEED3",
     "guid": "https://nyaa.si/view/2185612",
-    "last_seen": 1794900587,
+    "last_seen": 1794934817,
     "first_seen": 1794580036
   },
   "2185795": {
@@ -9621,7 +9625,7 @@
     "pub_date": "Fri, 13 Nov 2026 20:11:40 -0000",
     "description": "<a href=\"https://nyaa.si/view/2185795\">#2185795 | Imaizumi Brings All the Gals to His House [Semi-Colored] v01-07 (2024-2026) (Digital) (wangson)</a> | 1.0 GiB | Literature - English-translated | DC787C0291A4100F2C8069AAE6D31B4D25D45CB1",
     "guid": "https://nyaa.si/view/2185795",
-    "last_seen": 1794900587,
+    "last_seen": 1794934817,
     "first_seen": 1794603447
   },
   "2185724": {
@@ -9655,7 +9659,7 @@
     "pub_date": "Fri, 13 Nov 2026 16:45:46 -0000",
     "description": "<a href=\"https://nyaa.si/view/2185723\">#2185723 | Knights of the Zodiac - Saint Seiya (2004-2010) (Digital) (Rillant)</a> | 6.5 GiB | Literature - English-translated | 04C81550266BCB544991CF12713DE69F551D5C8D",
     "guid": "https://nyaa.si/view/2185723",
-    "last_seen": 1794900587,
+    "last_seen": 1794934817,
     "first_seen": 1794603447
   },
   "2185692": {
@@ -9670,7 +9674,7 @@
     "pub_date": "Fri, 13 Nov 2026 16:09:52 -0000",
     "description": "<a href=\"https://nyaa.si/view/2185692\">#2185692 | I&#39;m the Evil Lord of an Intergalactic Empire! - Vol. 11 (Audiobook) [Troglodyte]</a> | 442.9 MiB | Literature - English-translated | DD7961BA3BB2A80A01A2E07F5942AE5CA63E5634",
     "guid": "https://nyaa.si/view/2185692",
-    "last_seen": 1794900587,
+    "last_seen": 1794934817,
     "first_seen": 1794603447
   },
   "2185820": {
@@ -9685,7 +9689,7 @@
     "pub_date": "Fri, 13 Nov 2026 22:37:42 -0000",
     "description": "<a href=\"https://nyaa.si/view/2185820\">#2185820 | Kakkou no Iinazuke | A Couple of Cuckoos v01-31 [Color Chapter Page + Oneshot] (Digital) (wangson, Stick, Jaimini&#39;s~box~, A Couple of Cuck Fucks)</a> | 19.3 GiB | Literature - English-translated | 7619EF315C597B71A846EEEAF1F6384E91E6A1C5",
     "guid": "https://nyaa.si/view/2185820",
-    "last_seen": 1794900587,
+    "last_seen": 1794934817,
     "first_seen": 1794619328
   },
   "2185908": {
@@ -9700,7 +9704,7 @@
     "pub_date": "Sat, 14 Nov 2026 06:26:18 -0000",
     "description": "<a href=\"https://nyaa.si/view/2185908\">#2185908 | Banished from the Hero’s Party, I Decided to Live a Quiet Life in the Countryside [Yen Press]</a> | 174.6 MiB | Literature - English-translated | E80F61DAB3BEAE2E4D4FED52BD82F03FF1F9F8FD",
     "guid": "https://nyaa.si/view/2185908",
-    "last_seen": 1794900587,
+    "last_seen": 1794934817,
     "first_seen": 1794642968
   },
   "2185875": {
@@ -9719,7 +9723,7 @@
     "pub_date": "Sat, 14 Nov 2026 02:41:02 -0000",
     "description": "<a href=\"https://nyaa.si/view/2185875\">#2185875 | The Misdeeds of an Extremely Arrogant Villain Aristocrat v01 [Audiobook] [Seven Seas Siren] [Stick &amp; Oak]</a> | 290.9 MiB | Literature - English-translated | 86E019601878EE0284D8F1A3F271C4827F5135EE",
     "guid": "https://nyaa.si/view/2185875",
-    "last_seen": 1794900587,
+    "last_seen": 1794934817,
     "first_seen": 1794642968
   },
   "2185873": {
@@ -9734,7 +9738,7 @@
     "pub_date": "Sat, 14 Nov 2026 02:38:18 -0000",
     "description": "<a href=\"https://nyaa.si/view/2185873\">#2185873 | Riverbay Road Men&#39;s Dormitory v01-02 [Audiobook] [Seven Seas Siren] [Stick &amp; Oak] [Completed]</a> | 1.1 GiB | Literature - English-translated | 58E61FEE76AC9D7DA5651F68D1285A4709189F20",
     "guid": "https://nyaa.si/view/2185873",
-    "last_seen": 1794900587,
+    "last_seen": 1794934817,
     "first_seen": 1794642968
   },
   "2185872": {
@@ -9753,7 +9757,7 @@
     "pub_date": "Sat, 14 Nov 2026 02:38:16 -0000",
     "description": "<a href=\"https://nyaa.si/view/2185872\">#2185872 | I&#39;m the Evil Lord of an Intergalactic Empire! v01-11 [Audiobook] [Seven Seas Siren] [Stick &amp; Oak]</a> | 4.9 GiB | Literature - English-translated | E681C025A2F4C1065700B4E0D59B6F3433AB7804",
     "guid": "https://nyaa.si/view/2185872",
-    "last_seen": 1794900587,
+    "last_seen": 1794934817,
     "first_seen": 1794642968
   },
   "2185870": {
@@ -9772,7 +9776,7 @@
     "pub_date": "Sat, 14 Nov 2026 02:06:15 -0000",
     "description": "<a href=\"https://nyaa.si/view/2185870\">#2185870 | A Tale of the Secret Saint ZERO v01-06 [Seven Seas] [Stick]</a> | 44.4 MiB | Literature - English-translated | FF0E20938AAF97A8532E75DE3DDFF46ABCCD7F57",
     "guid": "https://nyaa.si/view/2185870",
-    "last_seen": 1794900587,
+    "last_seen": 1794934817,
     "first_seen": 1794642968
   },
   "2185965": {
@@ -9787,7 +9791,7 @@
     "pub_date": "Sat, 14 Nov 2026 11:48:52 -0000",
     "description": "<a href=\"https://nyaa.si/view/2185965\">#2185965 | Black Cat (2006-2009) (Digital) (Rillant) (f)</a> | 3.4 GiB | Literature - English-translated | 5C55C72CD4E10713E0CB049A67225A18286446D0",
     "guid": "https://nyaa.si/view/2185965",
-    "last_seen": 1794900587,
+    "last_seen": 1794934817,
     "first_seen": 1794668087
   },
   "2185919": {
@@ -9806,7 +9810,7 @@
     "pub_date": "Sat, 14 Nov 2026 09:24:44 -0000",
     "description": "<a href=\"https://nyaa.si/view/2185919\">#2185919 | BanG Dream! It&#39;s MyGO!!!!! Swaying in the Rain, Looking for the Sunshine 019 (2026) (Digital)</a> | 62.7 MiB | Literature - English-translated | E455738D40F01BB90C67C4F321BCBEF7E21E9CF6",
     "guid": "https://nyaa.si/view/2185919",
-    "last_seen": 1794900587,
+    "last_seen": 1794934817,
     "first_seen": 1794668087
   },
   "2186229": {
@@ -9821,7 +9825,7 @@
     "pub_date": "Sat, 14 Nov 2026 18:18:06 -0000",
     "description": "<a href=\"https://nyaa.si/view/2186229\">#2186229 | Nighthawk Returns v01-03 (2026) (Scanlation) (Morgan)</a> | 336.0 MiB | Literature - English-translated | EAA47A8CCAB943387EFCBD8BBDCA367709E3E10F",
     "guid": "https://nyaa.si/view/2186229",
-    "last_seen": 1794900587,
+    "last_seen": 1794934817,
     "first_seen": 1794685809
   },
   "2186228": {
@@ -9840,7 +9844,7 @@
     "pub_date": "Sat, 14 Nov 2026 18:18:03 -0000",
     "description": "<a href=\"https://nyaa.si/view/2186228\">#2186228 | Please Tell Me! Galko-chan v06 (2026) (Scanlation) (Morgan)</a> | 453.1 MiB | Literature - English-translated | 572575045881D5CEA8CD3E488167971400AD075A",
     "guid": "https://nyaa.si/view/2186228",
-    "last_seen": 1794900587,
+    "last_seen": 1794934817,
     "first_seen": 1794685809
   },
   "2186227": {
@@ -9859,7 +9863,7 @@
     "pub_date": "Sat, 14 Nov 2026 18:17:58 -0000",
     "description": "<a href=\"https://nyaa.si/view/2186227\">#2186227 | The Sweet Sixty Princess v01-02 (2026) (Scanlation) (Morgan, TheSpinyBackTeam)</a> | 595.9 MiB | Literature - English-translated | D6491F3217285A936F8DC76B4EA147D953C13CA0",
     "guid": "https://nyaa.si/view/2186227",
-    "last_seen": 1794900587,
+    "last_seen": 1794934817,
     "first_seen": 1794685809
   },
   "2186354": {
@@ -9874,7 +9878,7 @@
     "pub_date": "Sun, 15 Nov 2026 04:40:10 -0000",
     "description": "<a href=\"https://nyaa.si/view/2186354\">#2186354 | BanG Dream! YUME∞MITA Arale ∞ Aralebulation 003 (2026) (Digital) (flow3ry)</a> | 35.6 MiB | Literature - English-translated | F35E88755AC4B407C631DEE6B07C30432779BC9B",
     "guid": "https://nyaa.si/view/2186354",
-    "last_seen": 1794900587,
+    "last_seen": 1794934817,
     "first_seen": 1794722005
   },
   "2186751": {
@@ -9889,7 +9893,7 @@
     "pub_date": "Sun, 15 Nov 2026 19:02:07 -0000",
     "description": "<a href=\"https://nyaa.si/view/2186751\">#2186751 | Death Note (2005-2007) (Digital) (Rillant)</a> | 2.7 GiB | Literature - English-translated | 41BECA73A740559E5493EB4CD059D5CF7070E6DF",
     "guid": "https://nyaa.si/view/2186751",
-    "last_seen": 1794900587,
+    "last_seen": 1794934817,
     "first_seen": 1794771571
   },
   "2186750": {
@@ -9908,7 +9912,7 @@
     "pub_date": "Sun, 15 Nov 2026 19:02:00 -0000",
     "description": "<a href=\"https://nyaa.si/view/2186750\">#2186750 | Hikaru no Go (2004-2011) (Digital) (Rillant)</a> | 4.7 GiB | Literature - English-translated | FB0D9527FB95D35355608B2528F00D95A9C679DA",
     "guid": "https://nyaa.si/view/2186750",
-    "last_seen": 1794900587,
+    "last_seen": 1794934817,
     "first_seen": 1794771571
   },
   "2186749": {
@@ -9927,7 +9931,7 @@
     "pub_date": "Sun, 15 Nov 2026 19:01:56 -0000",
     "description": "<a href=\"https://nyaa.si/view/2186749\">#2186749 | Naruto (2003-2015) (Digital) (Rillant)</a> | 11.9 GiB | Literature - English-translated | 37FAF38FBB3F1D66D6A07F2A9D22F7341697FA2A",
     "guid": "https://nyaa.si/view/2186749",
-    "last_seen": 1794900587,
+    "last_seen": 1794934817,
     "first_seen": 1794771571
   },
   "2186612": {
@@ -9946,7 +9950,7 @@
     "pub_date": "Sun, 15 Nov 2026 15:23:27 -0000",
     "description": "<a href=\"https://nyaa.si/view/2186612\">#2186612 | Weekly Viz, ShonenJump and MangaPlus Chapter Updates - Week 46 2026 (Digital) (Rillant)</a> | 1.1 GiB | Literature - English-translated | 2A7507C04432CA98ED10263F5B1B4D6188DB0BC9",
     "guid": "https://nyaa.si/view/2186612",
-    "last_seen": 1794900587,
+    "last_seen": 1794934817,
     "first_seen": 1794771571
   },
   "2186984": {
@@ -9965,7 +9969,7 @@
     "pub_date": "Mon, 16 Nov 2026 16:18:28 -0000",
     "description": "<a href=\"https://nyaa.si/view/2186984\">#2186984 | Dandadan 253</a> | 11.4 MiB | Literature - English-translated | 63636F606E26E3BCB287678A54464E1141402D60",
     "guid": "https://nyaa.si/view/2186984",
-    "last_seen": 1794900587,
+    "last_seen": 1794934817,
     "first_seen": 1794872910
   },
   "2187101": {
@@ -9980,7 +9984,7 @@
     "pub_date": "Tue, 17 Nov 2026 06:20:03 -0000",
     "description": "<a href=\"https://nyaa.si/view/2187101\">#2187101 | A Couple of Cuckoos v01-32 (2021-2026) (Digital) (Stick)</a> | 19.9 GiB | Literature - English-translated | C4AE1506D663E06A3051A1AB73A13F7C2D136B79",
     "guid": "https://nyaa.si/view/2187101",
-    "last_seen": 1794900587,
+    "last_seen": 1794934817,
     "first_seen": 1794900587
   },
   "2187085": {
@@ -9995,7 +9999,7 @@
     "pub_date": "Tue, 17 Nov 2026 01:15:40 -0000",
     "description": "<a href=\"https://nyaa.si/view/2187085\">#2187085 | I Kidnapped the Youngest Daughter of the Sichuan Tang Clan [Complete][KR Web Novel] 사천당가의 막내딸을 납치했다</a> | 8.9 MiB | Literature - English-translated | EA9D8C18BA2A098CB0D06D2FAB72A2D7C0D533C7",
     "guid": "https://nyaa.si/view/2187085",
-    "last_seen": 1794900587,
+    "last_seen": 1794934817,
     "first_seen": 1794900587
   },
   "2187084": {
@@ -10014,7 +10018,7 @@
     "pub_date": "Tue, 17 Nov 2026 01:12:49 -0000",
     "description": "<a href=\"https://nyaa.si/view/2187084\">#2187084 | The Extra’s Academy Survival Guide c1~298 (Main Story End)[Ongoing][KR Web Novel] 아카데미에서 살아남기</a> | 17.9 MiB | Literature - English-translated | A73C01BEF713A8E55035A41BD344314EFEE7C4CA",
     "guid": "https://nyaa.si/view/2187084",
-    "last_seen": 1794900587,
+    "last_seen": 1794934817,
     "first_seen": 1794900587
   },
   "2187082": {
@@ -10052,7 +10056,7 @@
     "pub_date": "Tue, 17 Nov 2026 01:12:21 -0000",
     "description": "<a href=\"https://nyaa.si/view/2187081\">#2187081 | Became a Medieval Fantasy Wizard [Complete][KR Web Novel] 중세 판타지의 마법사가 되었다</a> | 2.2 MiB | Literature - English-translated | 81B1B2466DCAC261208BAF2B3880CA6724510B8E",
     "guid": "https://nyaa.si/view/2187081",
-    "last_seen": 1794900587,
+    "last_seen": 1794934817,
     "first_seen": 1794900587
   },
   "2187080": {
@@ -10071,7 +10075,7 @@
     "pub_date": "Tue, 17 Nov 2026 01:12:03 -0000",
     "description": "<a href=\"https://nyaa.si/view/2187080\">#2187080 | The Hero Banished Me for the Saintess&#39;s Obsession [Complete][KR Web Novel] 성녀가 내게 집착한다. 그랬더니 용사가 날 추방시켰다.</a> | 1.0 MiB | Literature - English-translated | D40CB838DE0AD3E4432AE4F1965E65690982CC34",
     "guid": "https://nyaa.si/view/2187080",
-    "last_seen": 1794900587,
+    "last_seen": 1794934817,
     "first_seen": 1794900587
   },
   "2187079": {
@@ -10090,7 +10094,7 @@
     "pub_date": "Tue, 17 Nov 2026 01:11:51 -0000",
     "description": "<a href=\"https://nyaa.si/view/2187079\">#2187079 | Heroines Remember My Death [Complete][KR Web Novel] 히로인들이 나의 죽음을 기억한다</a> | 5.4 MiB | Literature - English-translated | 1341F3A3B6A2655B8D083E27297B748F279EB561",
     "guid": "https://nyaa.si/view/2187079",
-    "last_seen": 1794900587,
+    "last_seen": 1794934817,
     "first_seen": 1794900587
   },
   "2187078": {
@@ -10109,7 +10113,7 @@
     "pub_date": "Tue, 17 Nov 2026 01:11:46 -0000",
     "description": "<a href=\"https://nyaa.si/view/2187078\">#2187078 | How to Turn a Villain into a Hero [Complete][KR Web Novel] 빌런을 히어로로 만드는 방법</a> | 1.2 MiB | Literature - English-translated | A5B448271885263A5EF8904468D3AF6A3B0AEFDE",
     "guid": "https://nyaa.si/view/2187078",
-    "last_seen": 1794900587,
+    "last_seen": 1794934817,
     "first_seen": 1794900587
   },
   "2187077": {
@@ -10128,7 +10132,7 @@
     "pub_date": "Tue, 17 Nov 2026 01:11:42 -0000",
     "description": "<a href=\"https://nyaa.si/view/2187077\">#2187077 | I Became a Blonde Chad of a NTR Game [Complete][KR Web Novel] NTR 게임의 금태양이 되었다</a> | 775.5 KiB | Literature - English-translated | B2826BE91E15F564DBB1EE5ED447E30BE66FDC8F",
     "guid": "https://nyaa.si/view/2187077",
-    "last_seen": 1794900587,
+    "last_seen": 1794934817,
     "first_seen": 1794900587
   },
   "2187076": {
@@ -10143,7 +10147,7 @@
     "pub_date": "Tue, 17 Nov 2026 01:11:34 -0000",
     "description": "<a href=\"https://nyaa.si/view/2187076\">#2187076 | I Became the Northern Grand Duchess&#39;s Guardian Knight [Complete][KR Web Novel] 북부대공녀의 호위 기사가 되었다</a> | 735.5 KiB | Literature - English-translated | 98E556EBCE5E89B338D11EDB341E8FF0618D59F4",
     "guid": "https://nyaa.si/view/2187076",
-    "last_seen": 1794900587,
+    "last_seen": 1794934817,
     "first_seen": 1794900587
   },
   "2187075": {
@@ -10162,7 +10166,7 @@
     "pub_date": "Tue, 17 Nov 2026 01:11:28 -0000",
     "description": "<a href=\"https://nyaa.si/view/2187075\">#2187075 | [Three Kingdoms] The Hungry Tigress [Complete][KR Web Novel] [삼국지]암호랑이는 굶주려있다</a> | 2.0 MiB | Literature - English-translated | 809D57A00E334A0F9563FF55669B95A55E46825F",
     "guid": "https://nyaa.si/view/2187075",
-    "last_seen": 1794900587,
+    "last_seen": 1794934817,
     "first_seen": 1794900587
   },
   "2187073": {
@@ -10181,7 +10185,7 @@
     "pub_date": "Tue, 17 Nov 2026 00:49:48 -0000",
     "description": "<a href=\"https://nyaa.si/view/2187073\">#2187073 | Will of the Witch 001-004 as v01 (Digital-Compilation) (Oak-JXL) [JPEG-XL]</a> | 260.4 MiB | Literature - English-translated | 4B176CBF9271F51FDE35A35D4760BBA65AA55632",
     "guid": "https://nyaa.si/view/2187073",
-    "last_seen": 1794900587,
+    "last_seen": 1794934817,
     "first_seen": 1794900587
   },
   "2187072": {
@@ -10200,7 +10204,7 @@
     "pub_date": "Tue, 17 Nov 2026 00:49:42 -0000",
     "description": "<a href=\"https://nyaa.si/view/2187072\">#2187072 | Will of the Witch 001-004 as v01 (Digital-Compilation) (Oak)</a> | 229.1 MiB | Literature - English-translated | 9B61E8FC97AEAC4F4C98EC1B619651D7B47605CF",
     "guid": "https://nyaa.si/view/2187072",
-    "last_seen": 1794900587,
+    "last_seen": 1794934817,
     "first_seen": 1794900587
   },
   "2187071": {
@@ -10219,7 +10223,7 @@
     "pub_date": "Tue, 17 Nov 2026 00:49:36 -0000",
     "description": "<a href=\"https://nyaa.si/view/2187071\">#2187071 | Will of the Witch 001-004 (2026) (Digital) (Oak)</a> | 223.1 MiB | Literature - English-translated | 04F96962D2CD91325409EE076BA8DFB6C2DEAB97",
     "guid": "https://nyaa.si/view/2187071",
-    "last_seen": 1794900587,
+    "last_seen": 1794934817,
     "first_seen": 1794900587
   },
   "2187070": {
@@ -10238,7 +10242,7 @@
     "pub_date": "Tue, 17 Nov 2026 00:49:33 -0000",
     "description": "<a href=\"https://nyaa.si/view/2187070\">#2187070 | The Marquis and His Second Wife&#39;s Idea of a Peaceful Family Dinner Table 001-003 as v01 (Digital-Compilation) (Oak-JXL) [JPEG-XL]</a> | 251.2 MiB | Literature - English-translated | 889CE23F0EF455FDCB0BE96C26559F51D3ACB566",
     "guid": "https://nyaa.si/view/2187070",
-    "last_seen": 1794900587,
+    "last_seen": 1794934817,
     "first_seen": 1794900587
   },
   "2187069": {
@@ -10257,7 +10261,7 @@
     "pub_date": "Tue, 17 Nov 2026 00:49:26 -0000",
     "description": "<a href=\"https://nyaa.si/view/2187069\">#2187069 | The Marquis and His Second Wife&#39;s Idea of a Peaceful Family Dinner Table 001-003 as v01 + 004-006 (Digital-Compilation) (Oak)</a> | 371.8 MiB | Literature - English-translated | F4CB12D9DE403EA9E5D36E5FD7AEE5A20782BBB1",
     "guid": "https://nyaa.si/view/2187069",
-    "last_seen": 1794900587,
+    "last_seen": 1794934817,
     "first_seen": 1794900587
   },
   "2187068": {
@@ -10276,7 +10280,7 @@
     "pub_date": "Tue, 17 Nov 2026 00:49:20 -0000",
     "description": "<a href=\"https://nyaa.si/view/2187068\">#2187068 | The Marquis and His Second Wife&#39;s Idea of a Peaceful Family Dinner Table 001-006 (2026) (Digital) (Oak)</a> | 365.2 MiB | Literature - English-translated | 7D3C2C2A6ED04FB8DFBCF532506EC1A4CD5AFB02",
     "guid": "https://nyaa.si/view/2187068",
-    "last_seen": 1794900587,
+    "last_seen": 1794934817,
     "first_seen": 1794900587
   },
   "2187067": {
@@ -10295,7 +10299,7 @@
     "pub_date": "Tue, 17 Nov 2026 00:49:17 -0000",
     "description": "<a href=\"https://nyaa.si/view/2187067\">#2187067 | Recruiter&#39;s Mask - A Telepathic Recruiter Raises an F-Rank Hire 001-004 as v01 (Digital-Compilation) (Oak-JXL) [JPEG-XL]</a> | 305.0 MiB | Literature - English-translated | 1D19DC656B27EE5CF6742D7FD65053D3942AE735",
     "guid": "https://nyaa.si/view/2187067",
-    "last_seen": 1794900587,
+    "last_seen": 1794934817,
     "first_seen": 1794900587
   },
   "2187066": {
@@ -10314,7 +10318,7 @@
     "pub_date": "Tue, 17 Nov 2026 00:49:12 -0000",
     "description": "<a href=\"https://nyaa.si/view/2187066\">#2187066 | Recruiter&#39;s Mask - A Telepathic Recruiter Raises an F-Rank Hire 001-004 as v01 (Digital-Compilation) (Oak)</a> | 301.2 MiB | Literature - English-translated | 2E2A5DC0123AC42935B28D4FE3BEAF52872A6E4D",
     "guid": "https://nyaa.si/view/2187066",
-    "last_seen": 1794900587,
+    "last_seen": 1794934817,
     "first_seen": 1794900587
   },
   "2187065": {
@@ -10333,7 +10337,7 @@
     "pub_date": "Tue, 17 Nov 2026 00:49:07 -0000",
     "description": "<a href=\"https://nyaa.si/view/2187065\">#2187065 | Recruiter&#39;s Mask - A Telepathic Recruiter Raises an F-Rank Hire 001-004 (2026) (Digital) (Oak)</a> | 287.5 MiB | Literature - English-translated | 2B479914593B52EFAE38B68D00135FF1F1D57531",
     "guid": "https://nyaa.si/view/2187065",
-    "last_seen": 1794900587,
+    "last_seen": 1794934817,
     "first_seen": 1794900587
   },
   "2187064": {
@@ -10352,7 +10356,7 @@
     "pub_date": "Tue, 17 Nov 2026 00:49:03 -0000",
     "description": "<a href=\"https://nyaa.si/view/2187064\">#2187064 | Olivia Dies When She&#39;s Loved 001-008 as v01-02 (Digital-Compilation) (Oak-JXL) [JPEG-XL]</a> | 305.7 MiB | Literature - English-translated | 1D89A73138AE652F03C08304AD5444F66EAACD07",
     "guid": "https://nyaa.si/view/2187064",
-    "last_seen": 1794900587,
+    "last_seen": 1794934817,
     "first_seen": 1794900587
   },
   "2187063": {
@@ -10371,7 +10375,7 @@
     "pub_date": "Tue, 17 Nov 2026 00:48:58 -0000",
     "description": "<a href=\"https://nyaa.si/view/2187063\">#2187063 | Olivia Dies When She&#39;s Loved 001-008 as v01-02 + 009 (Digital-Compilation) (Oak)</a> | 319.4 MiB | Literature - English-translated | 00C8D7EB8E7E5F5FFD5F185004F248DF35360C28",
     "guid": "https://nyaa.si/view/2187063",
-    "last_seen": 1794900587,
+    "last_seen": 1794934817,
     "first_seen": 1794900587
   },
   "2187062": {
@@ -10390,7 +10394,7 @@
     "pub_date": "Tue, 17 Nov 2026 00:48:54 -0000",
     "description": "<a href=\"https://nyaa.si/view/2187062\">#2187062 | Olivia Dies When She&#39;s Loved 001-009 (2026) (Digital) (Oak)</a> | 306.5 MiB | Literature - English-translated | A8AB65D6CEC45DC84E3F2AB35D561CA4FDD18BDA",
     "guid": "https://nyaa.si/view/2187062",
-    "last_seen": 1794900587,
+    "last_seen": 1794934817,
     "first_seen": 1794900587
   },
   "2187061": {
@@ -10409,7 +10413,7 @@
     "pub_date": "Tue, 17 Nov 2026 00:48:50 -0000",
     "description": "<a href=\"https://nyaa.si/view/2187061\">#2187061 | A Mysterious Job Called Oda Nobunaga 001-005 as v01 (Digital-Compilation) (Oak-JXL) [JPEG-XL]</a> | 202.7 MiB | Literature - English-translated | 6FA960DE6E7320F8F13B27219B7BC79FD538F270",
     "guid": "https://nyaa.si/view/2187061",
-    "last_seen": 1794900587,
+    "last_seen": 1794934817,
     "first_seen": 1794900587
   },
   "2187060": {
@@ -10428,7 +10432,7 @@
     "pub_date": "Tue, 17 Nov 2026 00:48:44 -0000",
     "description": "<a href=\"https://nyaa.si/view/2187060\">#2187060 | A Mysterious Job Called Oda Nobunaga 001-005 as v01 + 006-009 (Digital-Compilation) (Oak)</a> | 310.2 MiB | Literature - English-translated | 64175B9F169AB1C4AECAE22C7577F07AC8AF1C0A",
     "guid": "https://nyaa.si/view/2187060",
-    "last_seen": 1794900587,
+    "last_seen": 1794934817,
     "first_seen": 1794900587
   },
   "2187059": {
@@ -10447,7 +10451,7 @@
     "pub_date": "Tue, 17 Nov 2026 00:48:38 -0000",
     "description": "<a href=\"https://nyaa.si/view/2187059\">#2187059 | A Mysterious Job Called Oda Nobunaga 001-009 (2026) (Digital) (Oak)</a> | 306.3 MiB | Literature - English-translated | 023B26BDC964A79F1DAD05E22EC629D74E518EBC",
     "guid": "https://nyaa.si/view/2187059",
-    "last_seen": 1794900587,
+    "last_seen": 1794934817,
     "first_seen": 1794900587
   }
 }
